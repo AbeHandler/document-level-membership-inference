@@ -3,6 +3,7 @@ import configargparse
 import pickle
 from datasets import load_from_disk, concatenate_datasets
 from tqdm import tqdm
+from pathlib import Path
 import random 
 
 def get_parser():
@@ -17,13 +18,14 @@ def get_parser():
     parser.add_argument("--path_to_member_data", type=str, required=True)
     parser.add_argument("--path_to_non_member_data", type=str, required=True)
     parser.add_argument("--min_tokens", type=int, default=0)
-    parser.add_argument("--filter_on_date", type=int, default=0)
+    #parser.add_argument("--filter_on_date", type=int, default=0)
     parser.add_argument("--n_chunks", type=int, default=5)
     parser.add_argument("--n_pos_chunk", type=int, default=200)
     parser.add_argument("--seed", type=int, default=42)
 
     return parser
 
+'''
 def filter_on_date(dataset, date_name, min_date=1850, max_date=1910):
     all_indices = range(len(dataset))
     valid_indices = []
@@ -43,6 +45,7 @@ def filter_on_date(dataset, date_name, min_date=1850, max_date=1910):
     print("Number of documents after date filtering: ", len(sub_dataset))
     
     return sub_dataset
+'''
 
 def remove_small_docs(dataset, min_tokens):
     all_indices = range(len(dataset))
@@ -69,12 +72,12 @@ def main(args):
     
     print("Loading the raw data..")
     og_member_dataset = load_from_disk(args.path_to_member_data)
-    if args.filter_on_date:
-        og_member_dataset = filter_on_date(og_member_dataset, date_name="publication_date")
+    #if args.filter_on_date:
+    #    og_member_dataset = filter_on_date(og_member_dataset, date_name="publication_date")
     og_member_dataset = og_member_dataset.select_columns(['input_ids', 'attention_mask'])
     og_non_member_dataset = load_from_disk(args.path_to_non_member_data)
-    if args.filter_on_date:
-        og_non_member_dataset = filter_on_date(og_non_member_dataset, date_name="original_publication")
+    #if args.filter_on_date:
+    #    og_non_member_dataset = filter_on_date(og_non_member_dataset, date_name="original_publication")
     og_non_member_dataset = og_non_member_dataset.select_columns(['input_ids', 'attention_mask'])
 
     if args.min_tokens > 0:
@@ -95,7 +98,9 @@ def main(args):
         chunk_dataset_all = concatenate_datasets([chunk_members, chunk_non_members])
         labels = [1] * len(chunk_members) + [0] * len(chunk_members)
 
-        chunk_dataset_all.save_to_disk(f"{args.output_dir}/{args.prefix}_{chunk_id}_min_tokens{args.min_tokens}_seed{args.seed}")
+        output_path = Path(f"{args.output_dir}/{args.prefix}_{chunk_id}_min_tokens{args.min_tokens}_seed{args.seed}")
+        output_path.mkdir(parents=True, exist_ok=True)
+        chunk_dataset_all.save_to_disk(str(output_path))
         with open(f"{args.output_dir}/{args.prefix}_{chunk_id}_labels.pickle", 'wb') as f:
             pickle.dump(labels, f)
 
