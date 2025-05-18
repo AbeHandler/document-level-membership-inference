@@ -34,7 +34,3 @@ def prep_for_save():
 if __name__ == "__main__":
     for dspath in ['imperial-cpg/project-gutenberg-extended', 'deepmind/pg19']:
         warm_cache(dspath)
-
-    #gut = load_guttenberg_from_files()
-    prep_for_save()
-    os.system("cp datacache/imperial-cpg___project-gutenberg-extended/default/0.0.0/ca09993467e976b1f5d88dd58b2f00a039596871/project-gutenberg-extended-train-0000*-of-00005.arrow data/guttenberg/")
