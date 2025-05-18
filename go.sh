@@ -8,3 +8,5 @@ python src/tokenize_data.py --data_dir="./data" --path_to_tokenizer="./pretraine
 python src/split_chunks.py -c config/split_chunks.ini
 
 ./scripts/compute_perplexity.sh
+
+#python main.py -c config/main.ini
