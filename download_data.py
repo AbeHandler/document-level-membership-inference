@@ -8,23 +8,14 @@ from datasets import concatenate_datasets
 
 dataset_path = "datacache"
 
-def load_guttenberg_from_files():
-    ds = load_dataset("imperial-cpg/project-gutenberg-extended")
-    arrow_files = [
-            f"{dataset_path}/parquet-train-00000-of-00004.arrow",
-            f"{dataset_path}/parquet-train-00001-of-00004.arrow",
-            f"{dataset_path}/parquet-train-00002-of-00004.arrow",
-            f"{dataset_path}/parquet-train-00003-of-00004.arrow"
-        ]
-
-    # Load each Arrow file and concatenate
-    datasets = [Dataset.from_file(file) for file in arrow_files]
-    return concatenate_datasets(datasets)
-
 def warm_cache(dspath):
     try:
-        ds = load_dataset(dspath, split='train[:1M]', cache_dir="datacache")
-    except Exception as e:
+        ds_streaming = load_dataset(dspath, split="train", cache_dir="datacache", streaming=True)
+        ds = ds_streaming.take(50000)
+        ds_fixed = Dataset.from_generator(lambda: ds)
+        dsname = dspath.split("/").pop()
+        ds_fixed.save_to_disk(f"data/{dsname}")
+    except UnicodeDecodeError as e:
         pass
 
 def prep_for_save():
@@ -32,5 +23,5 @@ def prep_for_save():
     save_path.mkdir(parents=True, exist_ok=True)
 
 if __name__ == "__main__":
-    for dspath in ['imperial-cpg/project-gutenberg-extended', 'deepmind/pg19']:
+    for dspath in ['imperial-cpg/project-gutenberg-extended', 'abehandlerorg/blockeddocs']:
         warm_cache(dspath)
