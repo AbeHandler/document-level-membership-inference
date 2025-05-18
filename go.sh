@@ -4,3 +4,5 @@
 python download_data.py
 python src/tokenize_data.py --data_dir="./data" --path_to_tokenizer="./pretrained/tokenizers/open_llama_3b" --path_to_dataset=data/blockeddocs --nb_workers=4
 python src/tokenize_data.py --data_dir="./data" --path_to_tokenizer="./pretrained/tokenizers/open_llama_3b" --path_to_dataset=data/project-gutenberg-extended --nb_workers=4
+
+python src/split_chunks.py -c config/split_chunks.ini
