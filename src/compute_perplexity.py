@@ -86,6 +86,11 @@ def compute_perplexity(all_tokens_one_doc: list, model: LlamaForCausalLM,
 
     return doc_perplexity, nlls, probas, ranks, mean_probas
 
+
+def mkdir(path_to: str) -> None:
+    Path(path_to).parent.mkdir(parents=True, exist_ok=True)
+
+
 def main():
     DATA_DIR = args.data_dir
     PATH_TO_MODEL = args.path_to_model
@@ -168,10 +173,12 @@ def main():
 
     # save the general probability
     mean_probas_all = all_probas / n_docs
+    
+    mkdir(args.general_proba_path)
     with open(args.general_proba_path, 'wb') as f:
         pickle.dump(mean_probas_all, f)
 
-    # save the token freq
+    mkdir(args.token_freq_path)
     with open(args.token_freq_path, 'wb') as f:
         pickle.dump(token_freq, f)
     
