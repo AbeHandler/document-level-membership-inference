@@ -98,7 +98,7 @@ def main():
     TOKENIZER_NAME = PATH_TO_TOKENIZER.split('/')[-1]
     RESULTS_DIR = args.results_dir
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:3")
     print("Using device:", device)
     
     print(f"Loading {DATASET_NAME}...")
