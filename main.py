@@ -19,10 +19,10 @@ def get_parser():
     parser.add_argument("--experiment_name", type=str, required=True)
     parser.add_argument("--output_dir", type=str, required=True)
     parser.add_argument("--n_chunks", type=int, required=True)
-    parser.add_argument("--path_to_raw_data", type=str, required=True) # '/data/final_chunks/arxiv_XX_min_tokens5000_seed42'
+    parser.add_argument("--path_to_raw_data", type=str, required=True) # '/data/final_chunks/arxiv_XX_min_tokens100_seed42'
     parser.add_argument("--path_to_labels", type=str, required=True) # '/data/final_chunks/arxiv_0_labels.pickle'
     parser.add_argument("--path_to_perplexity_results", type=str, required=True)
-    # 'perplexity_open_llama_7b_open_llama_7b_arxiv_XX_min_tokens5000_seed42__400_2048_2047_seed42.pickle'
+    # 'perplexity_open_llama_7b_open_llama_7b_arxiv_XX_min_tokens100_seed42__400_2048_2047_seed42.pickle'
     parser.add_argument("--path_to_normalization_dict", type=str, required=True) 
     # '/data/final_chunks/general_proba/general_proba_arxiv_0_128.pickle'
     parser.add_argument("--norm_type", type=str, default='ratio')
