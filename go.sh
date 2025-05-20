@@ -9,4 +9,4 @@ python src/split_chunks.py -c config/split_chunks.ini
 
 ./scripts/compute_perplexity.sh
 
-#python main.py -c config/main.ini
+python main.py -c config/main.ini
