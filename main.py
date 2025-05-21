@@ -139,5 +139,5 @@ if __name__ == '__main__':
     args.path_to_perplexity_results = args.path_to_perplexity_results % {
         "nb_samples": args.nb_samples
     }
-    print(args.path_to_perplexity_result)
+    print(args.path_to_perplexity_results)
     main(args)
