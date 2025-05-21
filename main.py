@@ -1,6 +1,7 @@
 """Main file for experimentation."""
 import configargparse
 import pickle
+from pathlib import Path
 from datasets import load_from_disk
 from tqdm import tqdm
 
@@ -133,11 +134,17 @@ def main(args):
     with open(f"{args.output_dir}/{args.experiment_name}.pickle", 'wb') as f:
         pickle.dump(results_dict, f)
 
+def make_dir(dir_):
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
 if __name__ == '__main__':
 
     args = get_parser().parse_args()
     args.path_to_perplexity_results = args.path_to_perplexity_results % {
         "nb_samples": args.nb_samples
     }
-    print(args.path_to_perplexity_results)
+    print(args.output_dir)
+    print(args.experiment_name)
     main(args)
