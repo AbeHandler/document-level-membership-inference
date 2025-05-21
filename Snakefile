@@ -16,6 +16,9 @@ rule analysis:
         # 4. Install your requirements
         pip install -r requirements.txt
 
-        # 5. Mark as completed
+        # 5. Wipe the cache
+        rm -rf data
+
+        # 6. Mark as completed
         touch {output}
         """

@@ -23,5 +23,6 @@ def prep_for_save():
     save_path.mkdir(parents=True, exist_ok=True)
 
 if __name__ == "__main__":
-    for dspath in ['imperial-cpg/project-gutenberg-extended', 'abehandlerorg/blockeddocs']:
+    datasets = [o.strip('\n') for o in open("datasets.txt")]
+    for dspath in datasets:
         warm_cache(dspath)
