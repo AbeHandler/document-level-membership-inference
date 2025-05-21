@@ -29,6 +29,7 @@ def get_parser():
     parser.add_argument("--feat_extraction_type", type=str, default='simple_agg')
     parser.add_argument("--models", type=str, default='logistic_regression,random_forest')
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--nb_samples", type=int, required=True)
 
     return parser
 
@@ -133,4 +134,9 @@ def main(args):
         pickle.dump(results_dict, f)
 
 if __name__ == '__main__':
-    main(get_parser().parse_args())
+
+    args = get_parser().parse_args()
+    args.path_to_perplexity_results = args.path_to_perplexity_results % {
+        "nb_samples": args.nb_samples
+    }
+    main(args)
