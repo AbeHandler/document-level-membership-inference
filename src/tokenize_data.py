@@ -1,4 +1,4 @@
-from transformers import LlamaTokenizer
+from transformers import AutoTokenizer
 from datasets import load_from_disk
 import argparse
 
@@ -17,7 +17,7 @@ def main():
     PATH_TO_TOKENIZER = args.path_to_tokenizer
     TOKENIZER_NAME = PATH_TO_TOKENIZER.split('/')[-1]
     
-    tokenizer = LlamaTokenizer.from_pretrained(PATH_TO_TOKENIZER)
+    tokenizer = AutoTokenizer.from_pretrained(PATH_TO_TOKENIZER)
     
     print(f"Loading {DATASET_NAME}...")
     dataset = load_from_disk(PATH_TO_DATASET)
