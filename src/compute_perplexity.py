@@ -65,6 +65,9 @@ def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
         if np.isnan(loss_list).any():
             count_nan = int(np.isnan(loss_list).sum())
             frac_nan = count_nan/len(loss_list)
+            np_array = input_ids.cpu().numpy()
+            np.save("ids.npy", np_array)
+            import sys; sys.exit(0)
             print(f"[WARN] NaN in loss_list at doc slice {begin_loc}:{end_loc}, frac nan is {frac_nan:.2%}")
 
         # convert to probas
