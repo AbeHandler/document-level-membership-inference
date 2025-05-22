@@ -12,6 +12,7 @@ if loaded.ndim == 1:
 else:
     input_ids = torch.tensor(loaded, dtype=torch.long)              # shape (batch, seq_len)
 
+
 # 3) Move to GPU
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 input_ids = input_ids.to(device)
@@ -33,6 +34,8 @@ tokenizer = AutoTokenizer.from_pretrained(
     "dobolyilab/MISQSIPressPublic-bl1-124M", 
     use_fast=True
 )
+
+print(tokenizer.decode(loaded.ravel()))
 
 demo = tokenizer("Hello, world!", return_tensors="pt")
 
