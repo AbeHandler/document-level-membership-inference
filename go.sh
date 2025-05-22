@@ -33,8 +33,8 @@ python src/import_huggingface_model.py --model="$HF_MODEL" --write_dir="pretrain
 # 👀 Clear cache before main run!
 python download_data.py  # will download everything from datasets.txt, be sure to clear cache
 
-python src/tokenize_data.py --data_dir="./data" --path_to_tokenizer="$TOKENIZER_PATH" --path_to_dataset="data/$NON_MEMBER_DATASET_NAME" --nb_workers=4
-python src/tokenize_data.py --data_dir="./data" --path_to_tokenizer="$TOKENIZER_PATH" --path_to_dataset="data/$MEMBER_DATASET_NAME" --nb_workers=4
+python src/tokenize_data.py --data_dir="./data" --hfpath="$HF_MODEL" --path_to_dataset="data/$NON_MEMBER_DATASET_NAME" --nb_workers=4
+python src/tokenize_data.py --data_dir="./data" --hfpath="$HF_MODEL" --path_to_dataset="data/$MEMBER_DATASET_NAME" --nb_workers=4
 
 python src/split_chunks.py -c config/split_chunks.ini \
   --path_to_member_data="$TOKENIZED_MEMBER_PATH" \

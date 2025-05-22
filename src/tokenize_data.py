@@ -4,8 +4,8 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--data_dir", type=str, required=True)
-parser.add_argument("--path_to_tokenizer", type=str, required=True)
 parser.add_argument("--path_to_dataset", required=False, type=str)
+parser.add_argument("--hfpath", required=False, type=str)
 parser.add_argument("--nb_workers", type=int, default=10)
 parser.add_argument("--max_shard_size", type=str, default="4GB")
 args = parser.parse_args()
@@ -14,11 +14,11 @@ def main():
     DATA_DIR = args.data_dir
     PATH_TO_DATASET = args.path_to_dataset
     DATASET_NAME = PATH_TO_DATASET.split('/')[-1]
-    PATH_TO_TOKENIZER = args.path_to_tokenizer
     TOKENIZER_NAME = PATH_TO_TOKENIZER.split('/')[-1]
-    
-    tokenizer = AutoTokenizer.from_pretrained(PATH_TO_TOKENIZER)
-    
+
+    tokenizer = AutoTokenizer.from_pretrained(args.hfpath)
+    print(f"Loaded tokenizer for {args.hfpath}")
+
     print(f"Loading {DATASET_NAME}...")
     dataset = load_from_disk(PATH_TO_DATASET)
     
