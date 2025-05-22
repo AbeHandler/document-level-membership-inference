@@ -18,10 +18,6 @@ def warm_cache(dspath):
     except UnicodeDecodeError as e:
         pass
 
-def prep_for_save():
-    save_path = Path("data/guttenberg")
-    save_path.mkdir(parents=True, exist_ok=True)
-
 if __name__ == "__main__":
     datasets = [o.strip('\n') for o in open("datasets.txt")]
     for dspath in datasets:
