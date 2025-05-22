@@ -38,7 +38,8 @@ python src/tokenize_data.py --data_dir="./data" --hfpath="$HF_MODEL" --path_to_d
 
 python src/split_chunks.py -c config/split_chunks.ini \
   --path_to_member_data="$TOKENIZED_MEMBER_PATH" \
-  --path_to_non_member_data="$TOKENIZED_NON_MEMBER_PATH"
+  --path_to_non_member_data="$TOKENIZED_NON_MEMBER_PATH" \
+  --prefix="$CHUNK_PREFIX"
 
 
 for chunk in $(seq 0 $((N_CHUNKS - 1))); do
