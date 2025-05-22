@@ -2,9 +2,11 @@
 
 set -e  # stop if any command fails
 
+huggingface-cli login --token $(cat  ~/.cache/huggingface/token_read)
+
 export CUDA_VISIBLE_DEVICES=3
 
-HF_MODEL=${1:-"openlm-research/open_llama_3b"}  # default if not provided
+HF_MODEL=${1:-"dobolyilab/MISQSIPressPublic-bl1-124M"}  # default if not provided
 MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
 MEMBER_DATASET_NAME="project-gutenberg-extended"
 NON_MEMBER_DATASET_NAME="blockeddocs"
