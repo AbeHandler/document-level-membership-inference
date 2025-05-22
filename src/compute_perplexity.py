@@ -31,7 +31,7 @@ parser.add_argument("--seed", type=int, default=42)
 
 args = parser.parse_args()
 
-def compute_perplexity(all_tokens_one_doc: list, model: LlamaForCausalLM,
+def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
                        stride: int, max_length: int, top_probas: int, device):
     
     seq_len = len(all_tokens_one_doc)
