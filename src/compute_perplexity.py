@@ -63,7 +63,9 @@ def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
         loss = F.cross_entropy(shift_logits, shift_targets.view(-1), reduction='none')
         loss_list = list(loss.detach().cpu().numpy())
         if np.isnan(loss_list).any():
-            print(f"[WARN] NaN in loss_list at doc slice {begin_loc}:{end_loc}")
+            count_nan = int(np.isnan(loss_list).sum())
+            frac_nan = count_nan/len(loss_list)
+            print(f"[WARN] NaN in loss_list at doc slice {begin_loc}:{end_loc}, frac nan is {frac_nan:.2%}")
 
         # convert to probas
         probabilities = F.softmax(shift_logits, dim=1)
