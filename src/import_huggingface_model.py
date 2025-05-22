@@ -1,5 +1,5 @@
 # Load model directly
-from transformers import LlamaTokenizer, LlamaForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -16,12 +16,12 @@ MAX_SHARD_SIZE = args.max_shard_size
 def main():
     
     # load and write the tokenizer
-    tokenizer = LlamaTokenizer.from_pretrained(MODEL_NAME)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     tokenizer.save_pretrained(f"{WRITE_DIR}/tokenizers/{MODEL_NAME.split('/')[1]}")
     print(f'The tokenizer for {MODEL_NAME} has been saved successfully.')
     
     # load and write the model
-    model = LlamaForCausalLM.from_pretrained(MODEL_NAME)
+    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
     model.save_pretrained(
         f"{WRITE_DIR}/models/{MODEL_NAME.split('/')[1]}", max_shard_size=MAX_SHARD_SIZE
     )
