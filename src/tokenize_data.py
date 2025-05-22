@@ -5,9 +5,10 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--data_dir", type=str, required=True)
 parser.add_argument("--path_to_dataset", required=False, type=str)
-parser.add_argument("--hfpath", required=False, type=str)
+parser.add_argument("--hfpath", required=True, type=str)
 parser.add_argument("--nb_workers", type=int, default=10)
 parser.add_argument("--max_shard_size", type=str, default="4GB")
+parser.add_argument("--path_to_tokenizer", type=str, required=True) # kept for compatability w/ old code
 args = parser.parse_args()
 
 def main():
