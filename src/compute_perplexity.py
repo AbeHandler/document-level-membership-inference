@@ -4,7 +4,7 @@ import torch
 import torch.nn.functional as F
 from tqdm import tqdm
 from pathlib import Path
-from transformers import LlamaTokenizer, LlamaForCausalLM
+from transformers import AutoModelForCausalLM
 from datasets import load_from_disk
 import random 
 import argparse
@@ -116,7 +116,7 @@ def main():
             indices = pickle.load(f)
             tokenized_dataset = tokenized_dataset.select(indices)
             
-    model = LlamaForCausalLM.from_pretrained(PATH_TO_MODEL, torch_dtype=torch.float16).to(device)
+    model = AutoModelForCausalLM.from_pretrained(PATH_TO_MODEL, torch_dtype=torch.float16).to(device)
     max_length = args.max_length
     stride = args.stride
     top_probas = args.top_probas
