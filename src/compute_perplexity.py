@@ -50,6 +50,7 @@ def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
         trg_len = end_loc - prev_end_loc
 
         input_ids =  torch.tensor(all_tokens_one_doc[begin_loc:end_loc]).reshape(1, -1).to(device) 
+        print(f"input_ids shape: {input_ids.shape}, unique tokens: {input_ids.unique().tolist()}")
         target_ids = input_ids.clone().to(device)
 
         outputs = model(input_ids, labels=target_ids)
@@ -61,6 +62,8 @@ def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
         # so we get a loss for max_length - 1 tokens, being for all tokens expect for the first one
         loss = F.cross_entropy(shift_logits, shift_targets.view(-1), reduction='none')
         loss_list = list(loss.detach().cpu().numpy())
+        if np.isnan(loss_list).any():
+            print(f"[WARN] NaN in loss_list at doc slice {begin_loc}:{end_loc}")
 
         # convert to probas
         probabilities = F.softmax(shift_logits, dim=1)
@@ -82,6 +85,9 @@ def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
             break
             
     mean_probas = probas_sum / n_samples    
+    if not nlls:
+        print(f"[WARN] No tokens processed between stride windows; nlls is empty.")
+
     mean_nll = np.mean(list(nlls.values()))
     doc_perplexity = np.exp(mean_nll)
 
