@@ -15,6 +15,7 @@ def main():
     DATA_DIR = args.data_dir
     PATH_TO_DATASET = args.path_to_dataset
     DATASET_NAME = PATH_TO_DATASET.split('/')[-1]
+    PATH_TO_TOKENIZER = args.path_to_tokenizer
     TOKENIZER_NAME = PATH_TO_TOKENIZER.split('/')[-1]
 
     tokenizer = AutoTokenizer.from_pretrained(args.hfpath)
