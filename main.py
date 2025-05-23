@@ -3,6 +3,7 @@ import configargparse
 import pickle
 import numpy as np
 import pandas as pd
+import json
 from pathlib import Path
 from datasets import load_from_disk
 from tqdm import tqdm
@@ -141,6 +142,18 @@ def main(args):
     
     with open(f"{args.output_dir}/{args.experiment_name}.pickle", 'wb') as f:
         pickle.dump(results_dict, f)
+
+
+    out = []
+    for chunk in data['results_per_fold']:
+        for model in data['results_per_fold'][chunk]['probs']:
+            probs = data['results_per_fold'][chunk]['probs'][model]
+            d = {"probs": list(probs), "chunk": chunk, "model": model}
+            out.append(d)
+
+    with open(f"{args.output_dir}/{args.experiment_name}.csv", "w") as of:
+        for ino, i in enumerate(out):
+            of.write(json.dumps(i))
 
 def make_dir(dir_):
 
