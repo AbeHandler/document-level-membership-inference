@@ -1,6 +1,7 @@
 """Main file for experimentation."""
 import configargparse
 import pickle
+import numpy as np
 from pathlib import Path
 from datasets import load_from_disk
 from tqdm import tqdm
@@ -125,6 +126,13 @@ def main(args):
                                                                X_test=X_test, y_test=test_labels,
                                                                models=args.models)
 
+        
+        # this is how to adapt for our use case
+        all_results["probs"] = dict()
+        for model in trained_models:
+            _X = np.vstack([X_train, X_test])
+            probs = model.predict_proba(_X)[:,1]
+            all_results["probs"][model] = probs
         results_per_fold[i] = all_results
 
     print("Saving results...")
