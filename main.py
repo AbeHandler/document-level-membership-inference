@@ -132,7 +132,7 @@ def main(args):
         for model in trained_models:
             _X = np.vstack([X_train, X_test])
             probs = model.predict_proba(_X)[:,1]
-            all_results["probs"][model] = probs
+            all_results["probs"][model.__class__.__name__] = probs
         results_per_fold[i] = all_results
 
     print("Saving results...")
