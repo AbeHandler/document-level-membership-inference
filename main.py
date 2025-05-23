@@ -2,6 +2,7 @@
 import configargparse
 import pickle
 import numpy as np
+import pandas as pd
 from pathlib import Path
 from datasets import load_from_disk
 from tqdm import tqdm
