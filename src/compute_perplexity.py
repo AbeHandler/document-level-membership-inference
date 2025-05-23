@@ -3,12 +3,11 @@ import pickle
 import torch
 import torch.nn.functional as F
 from tqdm import tqdm
-from pathlib import Path
 from transformers import AutoModelForCausalLM
 from datasets import load_from_disk
 import random 
 import argparse
-
+from pathlib import Path
 from compute_token_freq import get_token_count, get_token_freq
 
 parser = argparse.ArgumentParser()
@@ -31,7 +30,7 @@ parser.add_argument("--seed", type=int, default=42)
 
 args = parser.parse_args()
 
-def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
+def compute_perplexity(all_tokens_one_doc: list, model: LlamaForCausalLM,
                        stride: int, max_length: int, top_probas: int, device):
     
     seq_len = len(all_tokens_one_doc)
@@ -50,7 +49,6 @@ def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
         trg_len = end_loc - prev_end_loc
 
         input_ids =  torch.tensor(all_tokens_one_doc[begin_loc:end_loc]).reshape(1, -1).to(device) 
-        print(f"input_ids shape: {input_ids.shape}, unique tokens: {input_ids.unique().tolist()}")
         target_ids = input_ids.clone().to(device)
 
         outputs = model(input_ids, labels=target_ids)
@@ -61,6 +59,7 @@ def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
 
         # so we get a loss for max_length - 1 tokens, being for all tokens expect for the first one
         loss = F.cross_entropy(shift_logits, shift_targets.view(-1), reduction='none')
+        loss_list = list(loss.detach().cpu().numpy())
 
         # convert to probas
         probabilities = F.softmax(shift_logits, dim=1)
@@ -82,14 +81,10 @@ def compute_perplexity(all_tokens_one_doc: list, model: AutoModelForCausalLM,
             break
             
     mean_probas = probas_sum / n_samples    
-    if not nlls:
-        print(f"[WARN] No tokens processed between stride windows; nlls is empty.")
-
     mean_nll = np.mean(list(nlls.values()))
     doc_perplexity = np.exp(mean_nll)
 
     return doc_perplexity, nlls, probas, ranks, mean_probas
-
 
 def mkdir(path_to: str) -> None:
     Path(path_to).parent.mkdir(parents=True, exist_ok=True)
@@ -107,6 +102,9 @@ def main():
     TOKENIZER_NAME = PATH_TO_TOKENIZER.split('/')[-1]
     RESULTS_DIR = args.results_dir
 
+    mkdir(args.token_freq_path)
+    mkdir(args.general_proba_path)
+
     device = torch.device("cuda:0")
     print("Using device:", device)
     
@@ -119,7 +117,7 @@ def main():
             indices = pickle.load(f)
             tokenized_dataset = tokenized_dataset.select(indices)
             
-    model = AutoModelForCausalLM.from_pretrained(PATH_TO_MODEL, torch_dtype=torch.bfloat16).to(device)
+    model = AutoModelForCausalLM.from_pretrained(PATH_TO_MODEL, torch_dtype=torch.float32).to(device)
     max_length = args.max_length
     stride = args.stride
     top_probas = args.top_probas
@@ -177,12 +175,10 @@ def main():
 
     # save the general probability
     mean_probas_all = all_probas / n_docs
-    
-    mkdir(args.general_proba_path)
     with open(args.general_proba_path, 'wb') as f:
         pickle.dump(mean_probas_all, f)
 
-    mkdir(args.token_freq_path)
+    # save the token freq
     with open(args.token_freq_path, 'wb') as f:
         pickle.dump(token_freq, f)
     
