@@ -52,7 +52,7 @@ def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame) -> tuple:
     return X_train, X_test
 
 def train_LogisticRegression(X_train: pd.DataFrame, y_train: pd.DataFrame) -> LogisticRegression:
-    clf = LogisticRegression()
+    clf = LogisticRegression(max_iter=10000)   # 👀 increased this param to allow to converge in xval setting
     clf.fit(X_train, y_train)
     return clf
 

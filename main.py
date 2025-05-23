@@ -126,12 +126,11 @@ def main(args):
                                                                X_test=X_test, y_test=test_labels,
                                                                models=args.models)
 
-        
         # this is how to adapt for our use case
         all_results["probs"] = dict()
         for model in trained_models:
             _X = np.vstack([X_train, X_test])
-            probs = model.predict_proba(_X)[:,1]
+            probs = cross_val_predict(model, pd.concat([X_train, X_test]), train_labels + test_labels, cv=5, method='predict_proba')[:, 1]
             all_results["probs"][model.__class__.__name__] = probs
         results_per_fold[i] = all_results
 
