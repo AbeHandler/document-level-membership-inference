@@ -145,9 +145,9 @@ def main(args):
 
 
     out = []
-    for chunk in data['results_per_fold']:
-        for model in data['results_per_fold'][chunk]['probs']:
-            probs = data['results_per_fold'][chunk]['probs'][model]
+    for chunk in results_dict['results_per_fold']:
+        for model in results_dict['results_per_fold'][chunk]['probs']:
+            probs = results_dict['results_per_fold'][chunk]['probs'][model]
             d = {"probs": list(probs), "chunk": chunk, "model": model}
             out.append(d)
 
