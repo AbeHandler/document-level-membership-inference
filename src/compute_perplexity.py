@@ -122,7 +122,7 @@ def main():
             indices = pickle.load(f)
             tokenized_dataset = tokenized_dataset.select(indices)
             
-    model = AutoModelForCausalLM.from_pretrained(PATH_TO_MODEL, torch_dtype=torch.float32).to(device)
+    model = AutoModelForCausalLM.from_pretrained(PATH_TO_MODEL, torch_dtype=torch.bfloat16).to(device)
     max_length = args.max_length
     stride = args.stride
     top_probas = args.top_probas
