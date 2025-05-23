@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 from datasets import load_from_disk
 from tqdm import tqdm
-
+from sklearn.model_selection import cross_val_predict
 from src.normalization import normalize_tokens_doc
 from src.feature_extraction import extract_features
 from src.meta_classifier import scale_features, fit_validate_classifiers
