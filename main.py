@@ -154,8 +154,8 @@ def main(args):
 
     all_probs = []
     all_test_ids = []
-    for ky in D['results_per_fold']:
-        fold = D['results_per_fold'][ky]
+    for ky in results_dict['results_per_fold']:
+        fold = results_dict['results_per_fold'][ky]
         probs = fold['test_probs'][args.model]
         test_ids = fold['test_ids']
         all_probs = all_probs + probs.tolist()
