@@ -162,7 +162,7 @@ def main(args):
         all_test_ids = all_test_ids + test_ids
     df = pd.DataFrame({"all_probs": all_probs, "all_test_ids": all_test_ids})
 
-    df.to_csv(f"{args.output_dir}/{args.experiment_name}.csv")
+    df.to_csv(f"{args.output_dir}/{args.experiment_name}.csv", index=False)
 
 def make_dir(dir_):
 
