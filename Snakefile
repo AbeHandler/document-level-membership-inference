@@ -30,7 +30,7 @@ rule run_model:
     input:
         ".snake.init"
     output:
-        "classifier_results/chunks/{dataset}_{model_id}_chunk{chunk}.csv"
+        "classifier_results/chunks/{dataset}_{model_id}_chunk{chunk}.jsonl"
     params:
         hf_model=lambda wildcards: f"dobolyilab/{wildcards.model_id}",
         dataset=lambda wildcards: wildcards.dataset
