@@ -8,14 +8,14 @@ export CUDA_VISIBLE_DEVICES=3
 
 HF_MODEL=${1:-"dobolyilab/MISQSIPressPublic-bl1-124M"}  # default if not provided
 MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
-MEMBER_DATASET_NAME="blockeddocs"
-NON_MEMBER_DATASET_NAME="blockeddocs"
+MEMBER_DATASET_NAME=${2:-"blockeddocs"}
+NON_MEMBER_DATASET_NAME=$MEMBER_DATASET_NAME
+CHUNK_PREFIX=$MEMBER_DATASET_NAME
 TOKENIZER_PATH="./pretrained/tokenizers/$MODEL_ID"
 TOKENIZED_MEMBER_PATH="data/tokenized/$MODEL_ID/$MEMBER_DATASET_NAME"
 TOKENIZED_NON_MEMBER_PATH="data/tokenized/$MODEL_ID/$NON_MEMBER_DATASET_NAME"
 N_CHUNKS=5
 CHUNK_ID="XX"
-CHUNK_PREFIX="blockeddocs"
 NB_SAMPLES=400
 MAX_LEN=128
 STRIDE=127
