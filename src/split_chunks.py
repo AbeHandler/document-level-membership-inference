@@ -100,18 +100,8 @@ def main(args):
     for chunk_id in range(args.n_chunks):
         chunk_members = member_dataset.select(members_samples_idx[chunk_id * args.n_pos_chunk : (chunk_id + 1) * args.n_pos_chunk])
         chunk_non_members = non_member_dataset.select(non_members_samples_idx[chunk_id * args.n_pos_chunk : (chunk_id + 1) * args.n_pos_chunk])
-        
-        chunk_members_metadata = {k: chunk_members[k] for k in ["id", "url"]}
-        chunk_non_members_metadata = {k: chunk_non_members[k] for k in ["id", "url"]}
 
-        # we need to store the metadata information for each chunk to link scores w/ downstream analysis
-        with open(f"{args.output_dir}/{args.prefix}_{chunk_id}_metadata.json", "w") as f:
-            json.dump({
-                "chunk_members_metadata": chunk_members_metadata,
-                "chunk_non_members_metadata": chunk_non_members_metadata
-            }, f)
-
-        chunk_dataset_all = concatenate_datasets([chunk_members, chunk_non_members]).select_columns(['input_ids', 'attention_mask'])
+        chunk_dataset_all = concatenate_datasets([chunk_members, chunk_non_members]).select_columns(['input_ids', 'attention_mask', 'id', 'url'])
         labels = [1] * len(chunk_members) + [0] * len(chunk_members)
 
         chunk_dataset_all.save_to_disk(f"{args.output_dir}/{args.prefix}_{chunk_id}_min_tokens{args.min_tokens}_seed{args.seed}")
