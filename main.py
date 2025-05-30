@@ -35,6 +35,9 @@ def get_parser():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--nb_samples", type=int, required=True)
 
+    # this package runs both a log reg and a random forest model. This param chooses the model
+    parser.add_argument("--model", type=str, default='LogisticRegression')
+
     return parser
 
 def get_train_token_norm(chunks: list, path_to_raw_data: str, path_to_normalization_dict: str) -> dict:
@@ -149,17 +152,17 @@ def main(args):
     with open(f"{args.output_dir}/{args.experiment_name}.pickle", 'wb') as f:
         pickle.dump(results_dict, f)
 
+    all_probs = []
+    all_test_ids = []
+    for ky in D['results_per_fold']:
+        fold = D['results_per_fold'][ky]
+        probs = fold['test_probs'][args.model]
+        test_ids = fold['test_ids']
+        all_probs = all_probs + probs.tolist()
+        all_test_ids = all_test_ids + test_ids
+    df = pd.DataFrame({"all_probs": all_probs, "all_test_ids": all_test_ids})
 
-    out = []
-    for chunk in results_dict['results_per_fold']:
-        for model in results_dict['results_per_fold'][chunk]['probs']:
-            probs = results_dict['results_per_fold'][chunk]['probs'][model]
-            d = {"probs": list(probs), "chunk": chunk, "model": model}
-            out.append(d)
-
-    with open(f"{args.output_dir}/{args.experiment_name}.jsonl", "w") as of:
-        for ino, i in enumerate(out):
-            of.write(json.dumps(i) + "\n")
+    df.to_csv(f"{args.output_dir}/{args.experiment_name}.csv")
 
 def make_dir(dir_):
 
