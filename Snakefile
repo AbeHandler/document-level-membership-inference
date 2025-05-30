@@ -22,3 +22,16 @@ rule analysis:
         # 6. Mark as completed
         touch {output}
         """
+
+# 👀 $ snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunk00.csv
+# snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunk00.csv --dag | dot -Tpng > dag.png && open dag.png
+rule run_model:
+    input:
+        ".meeus.init"
+    output:
+        "classifier_results/chunks/{dataset}_{model_id}_chunk{chunk}.csv"
+    params:
+        hf_model=lambda wildcards: f"dobolyilab/{wildcards.model_id}",
+        dataset=lambda wildcards: wildcards.dataset
+    shell:
+        "./go.sh {params.hf_model} {params.dataset}"
