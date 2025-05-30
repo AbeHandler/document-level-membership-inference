@@ -1,2 +1,4 @@
 datacache/
 .snake*
+*__pycache__*
+data/project-gutenberg-extended/
