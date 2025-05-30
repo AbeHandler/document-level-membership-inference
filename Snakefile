@@ -1,7 +1,7 @@
 
 rule analysis:
     output:
-        ".meeus.init"
+        ".snake.init"
     shell:
         r"""
         # 1. Create the env (if it doesn’t already exist)
@@ -27,7 +27,7 @@ rule analysis:
 # snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunk00.csv --dag | dot -Tpng > dag.png && open dag.png
 rule run_model:
     input:
-        ".meeus.init"
+        ".snake.init"
     output:
         "classifier_results/chunks/{dataset}_{model_id}_chunk{chunk}.csv"
     params:
