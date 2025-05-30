@@ -76,12 +76,12 @@ def main(args):
     og_member_dataset = load_from_disk(args.path_to_member_data)
     #if args.filter_on_date:
     #    og_member_dataset = filter_on_date(og_member_dataset, date_name="publication_date")
-    og_member_dataset = og_member_dataset.select_columns(['input_ids', 'attention_mask'])
+    og_member_dataset = og_member_dataset # removing select columns here we will do it below
     og_non_member_dataset = load_from_disk(args.path_to_non_member_data)
     
     #if args.filter_on_date:
     #    og_non_member_dataset = filter_on_date(og_non_member_dataset, date_name="original_publication")
-    og_non_member_dataset = og_non_member_dataset.select_columns(['input_ids', 'attention_mask'])
+    og_non_member_dataset = og_non_member_dataset # removing select columns here we will do it below
 
     #if args.min_tokens > 0:
     #    print("Removing the docs with limited tokens..")
@@ -111,7 +111,7 @@ def main(args):
                 "chunk_non_members_metadata": chunk_non_members_metadata
             }, f)
 
-        chunk_dataset_all = concatenate_datasets([chunk_members, chunk_non_members])
+        chunk_dataset_all = concatenate_datasets([chunk_members, chunk_non_members]).select_columns(['input_ids', 'attention_mask'])
         labels = [1] * len(chunk_members) + [0] * len(chunk_members)
 
         chunk_dataset_all.save_to_disk(f"{args.output_dir}/{args.prefix}_{chunk_id}_min_tokens{args.min_tokens}_seed{args.seed}")
