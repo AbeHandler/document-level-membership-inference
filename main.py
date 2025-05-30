@@ -160,7 +160,7 @@ def main(args):
         test_ids = fold['test_ids']
         all_probs = all_probs + probs.tolist()
         all_test_ids = all_test_ids + test_ids
-    df = pd.DataFrame({"all_probs": all_probs, "all_test_ids": all_test_ids})
+    df = pd.DataFrame({"score": all_probs, "id": all_test_ids})
 
     df.to_csv(f"{args.output_dir}/{args.experiment_name}.csv", index=False)
 
