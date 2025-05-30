@@ -24,7 +24,7 @@ rule analysis:
         """
 
 # I think this is the input but not 100% sure
-# 👀 $ snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunkXX.csv
+# 👀 $ snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunkXX.jsonl
 # snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunk00.csv --dag | dot -Tpng > dag.png && open dag.png
 rule run_model:
     input:
