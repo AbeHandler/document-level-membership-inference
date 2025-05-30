@@ -1,6 +1,6 @@
 beautifulsoup4==4.12.2
 ConfigArgParse
-datasets==2.10.1
+datasets==3.6.0
 matplotlib==3.7.2
 numpy==1.25.1
 pandas==2.0.3
