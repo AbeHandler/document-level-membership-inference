@@ -2,6 +2,7 @@
 
 set -e  # stop if any command fails
 
+conda activate doc_membership
 huggingface-cli login --token $(cat  ~/.cache/huggingface/token_read)
 
 export CUDA_VISIBLE_DEVICES=3
