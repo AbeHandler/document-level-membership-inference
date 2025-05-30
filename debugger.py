@@ -11,13 +11,21 @@ if loaded.ndim == 1:
 else:
     input_ids = torch.tensor(loaded, dtype=torch.long)              # shape (batch, seq_len)
 
+
+first_half  = input_ids[:, :input_ids.shape[1] // 2]
+second_half = input_ids[:, input_ids.shape[1] // 2 :]
+
+#input_ids = second_half
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 input_ids = input_ids.to(device)
+
+
 
 # Load the model
 model = AutoModelForCausalLM.from_pretrained(
     "dobolyilab/MISQSIPressPublic-bl1-124M",
-    torch_dtype=torch.float16,
+    torch_dtype=torch.float32,
 )
 
 model = model.to('cuda:0') 

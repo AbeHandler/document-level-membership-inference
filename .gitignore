@@ -1,1 +1,2 @@
-datacache/*
+datacache/
+.snake*
