@@ -150,9 +150,9 @@ def main(args):
             d = {"probs": list(probs), "chunk": chunk, "model": model}
             out.append(d)
 
-    with open(f"{args.output_dir}/{args.experiment_name}.csv", "w") as of:
+    with open(f"{args.output_dir}/{args.experiment_name}.jsonl", "w") as of:
         for ino, i in enumerate(out):
-            of.write(json.dumps(i))
+            of.write(json.dumps(i) + "\n")
 
 def make_dir(dir_):
 
