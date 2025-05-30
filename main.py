@@ -74,6 +74,9 @@ def prep_one_chunk(path_to_raw_data: str, path_to_perplexity_results: str,
     print("Loading the raw data..")
     raw_dataset =  load_from_disk(path_to_raw_data)
 
+    # e.g. "data/final_chunks/blockeddocs_1_min_tokens100_seed42"
+    ids = raw_dataset["id"]
+
     print("Loading the perplexity results...")
     with open(path_to_perplexity_results, 'rb') as f:
         perplex_results = pickle.load(f)
@@ -88,7 +91,8 @@ def prep_one_chunk(path_to_raw_data: str, path_to_perplexity_results: str,
         if len(perplex_results_normalized) != len(labels):
             labels = labels[:len(perplex_results_normalized)]
 
-    return perplex_results_normalized, labels
+    assert len(labels) == len(ids)
+    return perplex_results_normalized, labels, ids
 
 def main(args):
     """Main function to call."""
@@ -103,20 +107,21 @@ def main(args):
         train_token_norm = get_train_token_norm(chunks=train_chunks, path_to_raw_data=args.path_to_raw_data, 
                                                path_to_normalization_dict=args.path_to_normalization_dict)
 
-        train_perplex, train_labels = [], []
+        train_perplex, train_labels, train_ids = [], [], []
         for j in train_chunks:
-            perplex_results_normalized, labels = prep_one_chunk(path_to_raw_data=args.path_to_raw_data.replace('XX', str(j)), 
-                                                                path_to_perplexity_results=args.path_to_perplexity_results.replace('XX', str(j)),
-                                                                path_to_labels=args.path_to_labels.replace('XX', str(j)),
-                                                                token_norm=train_token_norm, norm_type=args.norm_type)
+            perplex_results_normalized, labels, _ids = prep_one_chunk(path_to_raw_data=args.path_to_raw_data.replace('XX', str(j)), 
+                                                                      path_to_perplexity_results=args.path_to_perplexity_results.replace('XX', str(j)),
+                                                                      path_to_labels=args.path_to_labels.replace('XX', str(j)),
+                                                                      token_norm=train_token_norm, norm_type=args.norm_type)
             train_perplex += [perplex_results_normalized[key] for key in perplex_results_normalized.keys()]
             train_labels += labels
+            train_ids += _ids
 
         # now do the test
-        test_perplex_results_normalized, test_labels = prep_one_chunk(path_to_raw_data=args.path_to_raw_data.replace('XX', str(test_chunk)), 
-                                                        path_to_perplexity_results=args.path_to_perplexity_results.replace('XX', str(test_chunk)),
-                                                        path_to_labels=args.path_to_labels.replace('XX', str(test_chunk)),
-                                                        token_norm=train_token_norm, norm_type=args.norm_type)
+        test_perplex_results_normalized, test_labels, test_ids = prep_one_chunk(path_to_raw_data=args.path_to_raw_data.replace('XX', str(test_chunk)), 
+                                                                                path_to_perplexity_results=args.path_to_perplexity_results.replace('XX', str(test_chunk)),
+                                                                                path_to_labels=args.path_to_labels.replace('XX', str(test_chunk)),
+                                                                                token_norm=train_token_norm, norm_type=args.norm_type)
         test_perplex = [test_perplex_results_normalized[key] for key in test_perplex_results_normalized.keys()]
         
         print("Extract features...")
@@ -129,10 +134,12 @@ def main(args):
                                                                models=args.models)
 
         # this is how to adapt for our use case
-        all_results["probs"] = dict()
+        all_results["test_probs"] = {}
+        all_results["test_ids"] = test_ids
         for model in trained_models:
-            probs = cross_val_predict(model, pd.concat([X_train, X_test]), train_labels + test_labels, cv=5, method='predict_proba')[:, 1]
-            all_results["probs"][model.__class__.__name__] = probs
+            model.fit(X_train, train_labels)
+            probs = model.predict_proba(X_test)[:, 1]
+            all_results["test_probs"][model.__class__.__name__] = probs
         results_per_fold[i] = all_results
 
     print("Saving results...")
