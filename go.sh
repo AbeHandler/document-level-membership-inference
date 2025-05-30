@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e  # stop if any command fails
-conda init
+eval "$(conda shell.bash hook)"
 conda activate doc_membership
 huggingface-cli login --token $(cat  ~/.cache/huggingface/token_read)
 
