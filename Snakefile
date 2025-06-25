@@ -28,6 +28,7 @@ rule copyright:
         """
         ./go.sh dobolyilab/blockbench-noblocksbin copywritetraps 100 200
         ./go.sh dobolyilab/blockbench-blocksbin copywritetraps 100 200
+        python scripts/merge_copyright.py
         """
     output:
         'classifier_results/chunks/copywritetraps_blockbench-blocksbin_chunkXX.csv',
