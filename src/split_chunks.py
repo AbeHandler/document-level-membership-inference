@@ -101,7 +101,12 @@ def main(args):
         chunk_members = member_dataset.select(members_samples_idx[chunk_id * args.n_pos_chunk : (chunk_id + 1) * args.n_pos_chunk])
         chunk_non_members = non_member_dataset.select(non_members_samples_idx[chunk_id * args.n_pos_chunk : (chunk_id + 1) * args.n_pos_chunk])
 
-        chunk_dataset_all = concatenate_datasets([chunk_members, chunk_non_members]).select_columns(['input_ids', 'attention_mask', 'id', 'url'])
+        C = concatenate_datasets([chunk_members, chunk_non_members])
+        if "url" in c.columns: # copyright does not have this
+            cols = ['input_ids', 'attention_mask', 'id', 'url']
+        else:
+            cols = ['input_ids', 'attention_mask', 'id']
+        chunk_dataset_all = C.select_columns(C)
         labels = [1] * len(chunk_members) + [0] * len(chunk_members)
 
         chunk_dataset_all.save_to_disk(f"{args.output_dir}/{args.prefix}_{chunk_id}_min_tokens{args.min_tokens}_seed{args.seed}")
