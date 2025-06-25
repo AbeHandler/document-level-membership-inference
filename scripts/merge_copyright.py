@@ -9,7 +9,9 @@ noblocks = pd.read_csv("classifier_results/chunks/copywritetraps_blockbench-nobl
 D = blocks.merge(noblocks,on="id")
 
 # returns a prediction for binary membership of input document
-# 4.4 Meta-classifier 
+# 4.4 Meta-classifier. So it should be more confident in no blocks
 D["delta"] = D["score_noblocks"] - D["score_blocks"]
+
+print(D["delta"].mean())
 
 D.to_csv("copyrighttraps.csv")
