@@ -4,4 +4,6 @@ blocks = pd.read_csv("classifier_results/chunks/copywritetraps_blockbench-blocks
 noblocks = pd.read_csv("classifier_results/chunks/copywritetraps_blockbench-noblocksbin_chunkXX.csv").rename(columns={"score": "score_noblocks"})
 D = blocks.merge(noblocks,on="id")
 
+D["delta"] = D["score_noblocks"] - D["score_blocks"]
+
 D.to_csv("copyrighttraps.csv")
