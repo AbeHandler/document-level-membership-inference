@@ -25,7 +25,13 @@ rule analysis:
 
 rule copyright:
     shell:
-        "./go.sh dobolyilab/blockbench-noblocksbin copywritetraps 100 200"
+        """
+        ./go.sh dobolyilab/blockbench-noblocksbin copywritetraps 100 200
+        ./go.sh dobolyilab/blockbench-blocksbin copywritetraps 100 200
+        """
+    output:
+        'classifier_results/chunks/copywritetraps_blockbench-blocksbin_chunkXX.csv',
+        'classifier_results/chunks/copywritetraps_blockbench-noblocksbin_chunkXX.csv'
 
 # I think this is the input but not 100% sure
 # 👀 $ snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunkXX.csv -j 1
