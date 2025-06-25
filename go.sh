@@ -13,13 +13,13 @@ MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
 MEMBER_DATASET_NAME=${2:-"blockeddocs"}
 N_POS_CHUNK=${3:-200}
 NB_SAMPLES=${4:-400}
+N_CHUNKS=${5:-5}
 echo $NB_SAMPLES
 NON_MEMBER_DATASET_NAME=$MEMBER_DATASET_NAME
 CHUNK_PREFIX=$MEMBER_DATASET_NAME
 TOKENIZER_PATH="./pretrained/tokenizers/$MODEL_ID"
 TOKENIZED_MEMBER_PATH="data/tokenized/$MODEL_ID/$MEMBER_DATASET_NAME"
 TOKENIZED_NON_MEMBER_PATH="data/tokenized/$MODEL_ID/$NON_MEMBER_DATASET_NAME"
-N_CHUNKS=5
 CHUNK_ID="XX"
 MAX_LEN=128
 STRIDE=127
@@ -46,7 +46,8 @@ python src/split_chunks.py -c config/split_chunks.ini \
   --path_to_member_data="$TOKENIZED_MEMBER_PATH" \
   --path_to_non_member_data="$TOKENIZED_NON_MEMBER_PATH" \
   --prefix="$CHUNK_PREFIX" \
-  --n_pos_chunk=$N_POS_CHUNK
+  --n_pos_chunk=$N_POS_CHUNK \
+  --n_chunks=$N_CHUNKS
 
 
 for chunk in $(seq 0 $((N_CHUNKS - 1))); do
