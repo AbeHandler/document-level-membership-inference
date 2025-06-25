@@ -125,6 +125,11 @@ def main():
     all_nlls = dict()
     nb_samples = len(tokenized_dataset) if args.nb_samples is None else args.nb_samples
 
+    # don't sample more than dataset size
+    # this is needed for copyright
+    if args.nb_samples > len(tokenized_dataset):
+        nb_samples = len(tokenized_dataset)
+
     # for the general proba
     all_probas = np.zeros(model.config.vocab_size)
     n_docs = 0
