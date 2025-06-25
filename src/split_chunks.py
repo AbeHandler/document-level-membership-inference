@@ -94,6 +94,9 @@ def main(args):
     non_member_dataset = og_non_member_dataset
 
     print("Composing the chunks...")
+    print(len(member_dataset))
+    print(args.n_chunks)
+    print(args.n_pos_chunk)
     members_samples_idx = random.sample(range(len(member_dataset)), args.n_chunks * args.n_pos_chunk)
     non_members_samples_idx = random.sample(range(len(non_member_dataset)), args.n_chunks * args.n_pos_chunk)
 
