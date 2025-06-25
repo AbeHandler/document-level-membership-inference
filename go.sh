@@ -5,7 +5,8 @@ eval "$(conda shell.bash hook)"
 conda activate doc_membership
 huggingface-cli login --token $(cat  ~/.cache/huggingface/token_read)
 
-export CUDA_VISIBLE_DEVICES=1
+GPU=1
+export CUDA_VISIBLE_DEVICES=$GPU
 
 HF_MODEL=${1:-"dobolyilab/MISQSIPressPublic-bl1-124M"}  # default if not provided
 MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
@@ -46,7 +47,7 @@ python src/split_chunks.py -c config/split_chunks.ini \
 
 
 for chunk in $(seq 0 $((N_CHUNKS - 1))); do
-    CUDA_VISIBLE_DEVICES=3 python src/compute_perplexity.py --data_dir='./data' \
+    CUDA_VISIBLE_DEVICES=$GPU python src/compute_perplexity.py --data_dir='./data' \
         --path_to_tokenizer="./pretrained/tokenizers/$MODEL_ID" \
         --path_to_model="./pretrained/models/$MODEL_ID" \
         --path_to_dataset="./data/final_chunks/${CHUNK_PREFIX}_${chunk}_min_tokens100_seed42" \
