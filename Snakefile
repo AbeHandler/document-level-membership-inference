@@ -26,8 +26,8 @@ rule analysis:
 rule copyright:
     shell:
         """
-        ./go.sh dobolyilab/blockbench-noblocksbin copywritetraps 100 200
-        ./go.sh dobolyilab/blockbench-blocksbin copywritetraps 100 200
+        ./go.sh dobolyilab/blockbench-noblocksbin copywritetraps 500 500 1
+        ./go.sh dobolyilab/blockbench-blocksbin copywritetraps 500 500 1
         python scripts/merge_copyright.py
         """
     output:
