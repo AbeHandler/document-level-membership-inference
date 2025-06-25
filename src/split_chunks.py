@@ -102,7 +102,7 @@ def main(args):
         chunk_non_members = non_member_dataset.select(non_members_samples_idx[chunk_id * args.n_pos_chunk : (chunk_id + 1) * args.n_pos_chunk])
 
         C = concatenate_datasets([chunk_members, chunk_non_members])
-        if "url" in C.columns: # copyright does not have this
+        if "url" in C.column_names: # copyright does not have this
             cols = ['input_ids', 'attention_mask', 'id', 'url']
         else:
             cols = ['input_ids', 'attention_mask', 'id']
