@@ -32,6 +32,8 @@ NORM_PATH="data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${CHUNK
 EXP_NAME="${CHUNK_PREFIX}_${MODEL_ID}_chunk${CHUNK_ID}"
 OUTDIR="./classifier_results/chunks"
 
+echo $PPL_PATH
+
 python src/import_huggingface_model.py --model="$HF_MODEL" --write_dir="pretrained"
 
 # 👀 Clear cache before main run!
