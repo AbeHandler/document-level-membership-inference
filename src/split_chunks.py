@@ -106,7 +106,7 @@ def main(args):
             cols = ['input_ids', 'attention_mask', 'id', 'url']
         else:
             cols = ['input_ids', 'attention_mask', 'id']
-        chunk_dataset_all = C.select_columns(C)
+        chunk_dataset_all = C.select_columns(cols)
         labels = [1] * len(chunk_members) + [0] * len(chunk_members)
 
         chunk_dataset_all.save_to_disk(f"{args.output_dir}/{args.prefix}_{chunk_id}_min_tokens{args.min_tokens}_seed{args.seed}")
