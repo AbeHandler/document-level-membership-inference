@@ -13,6 +13,7 @@ MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
 MEMBER_DATASET_NAME=${2:-"blockeddocs"}
 N_POS_CHUNK=${3:-200}
 NB_SAMPLES=${4:-400}
+echo $NB_SAMPLES
 NON_MEMBER_DATASET_NAME=$MEMBER_DATASET_NAME
 CHUNK_PREFIX=$MEMBER_DATASET_NAME
 TOKENIZER_PATH="./pretrained/tokenizers/$MODEL_ID"
