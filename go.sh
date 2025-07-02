@@ -17,7 +17,7 @@ N_CHUNKS=${5:-5}
 echo $N_POS_CHUNK
 echo $NB_SAMPLES
 echo $N_CHUNKS
-NON_MEMBER_DATASET_NAME='imperial-cpg/project-gutenberg-extended'
+NON_MEMBER_DATASET_NAME='project-gutenberg-extended'
 CHUNK_PREFIX=$MEMBER_DATASET_NAME
 TOKENIZER_PATH="./pretrained/tokenizers/$MODEL_ID"
 TOKENIZED_MEMBER_PATH="data/tokenized/$MODEL_ID/$MEMBER_DATASET_NAME"
