@@ -97,7 +97,9 @@ def prep_one_chunk(path_to_raw_data: str, path_to_perplexity_results: str,
     print('Loading labels')
     print(path_to_raw_data)
     print(path_to_labels)
-    assert len(labels) == len(ids), len(labels), len(ids)
+    print(f"len labels {len(labels)}")
+    print(f"ids {len(ids)}")
+    assert len(labels) == len(ids)
     return perplex_results_normalized, labels, ids
 
 def main(args):
