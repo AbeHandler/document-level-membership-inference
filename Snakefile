@@ -1,5 +1,4 @@
-
-rule analysis:
+rule init:
     output:
         ".snake.init"
     shell:
@@ -23,27 +22,27 @@ rule analysis:
         touch {output}
         """
 
+
+rule miacomparison:
+    output:
+        '.snake.mia_comparison'
+    shell:
+        """
+        $ python scripts/prepare_same_dataset_used_for_mia_comparison_in_mimir.py 
+        ./go.sh dobolyilab/blockbench-noblocksbin abehandlerorg/minhashblocksample_targetsonly_doc_level_mia
+        ./go.sh dobolyilab/blockbench-blocksbin abehandlerorg/minhashblocksample_targetsonly_doc_level_mia
+        touch {output}
+        """
+
 rule copyright:
+    input:
+        ".snake.init"
+    output:
+        'copyrighttraps.csv'
     shell:
         """
         ./go.sh dobolyilab/blockbench-noblocksbin copywritetraps 500 500 1
         ./go.sh dobolyilab/blockbench-blocksbin copywritetraps 500 500 1
         python scripts/merge_copyright.py
+        touch {output}
         """
-    output:
-        'classifier_results/chunks/copywritetraps_blockbench-blocksbin_chunkXX.csv',
-        'classifier_results/chunks/copywritetraps_blockbench-noblocksbin_chunkXX.csv'
-
-# I think this is the input but not 100% sure
-# 👀 $ snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunkXX.csv -j 1
-# snakemake classifier_results/chunks/blockeddocs_MISQSIPressPublic-bl1-124M_chunk00.csv --dag | dot -Tpng > dag.png && open dag.png
-rule run_model:
-    input:
-        ".snake.init"
-    output:
-        "classifier_results/chunks/{dataset}_{model_id}_chunk{chunk}.csv"
-    params:
-        hf_model=lambda wildcards: f"dobolyilab/{wildcards.model_id}",
-        dataset=lambda wildcards: wildcards.dataset
-    shell:
-        "./go.sh {params.hf_model} {params.dataset}"
