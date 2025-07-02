@@ -94,7 +94,10 @@ def prep_one_chunk(path_to_raw_data: str, path_to_perplexity_results: str,
         if len(perplex_results_normalized) != len(labels):
             labels = labels[:len(perplex_results_normalized)]
 
-    assert len(labels) == len(ids)
+    print('Loading labels')
+    print(path_to_raw_data)
+    print(path_to_labels)
+    assert len(labels) == len(ids), len(labels), len(ids)
     return perplex_results_normalized, labels, ids
 
 def main(args):
