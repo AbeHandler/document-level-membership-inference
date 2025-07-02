@@ -29,8 +29,8 @@ rule miacomparison:
     shell:
         """
         $ python scripts/prepare_same_dataset_used_for_mia_comparison_in_mimir.py 
-        ./go.sh dobolyilab/blockbench-noblocksbin abehandlerorg/minhashblocksample_targetsonly_doc_level_mia
-        ./go.sh dobolyilab/blockbench-blocksbin abehandlerorg/minhashblocksample_targetsonly_doc_level_mia
+        ./go.sh dobolyilab/blockbench-noblocksbin abehandlerorg/minhashblocksample_targetsonly_doc_level_mia 501 501 5
+        ./go.sh dobolyilab/blockbench-blocksbin abehandlerorg/minhashblocksample_targetsonly_doc_level_mia 501 501 5
         touch {output}
         """
 
