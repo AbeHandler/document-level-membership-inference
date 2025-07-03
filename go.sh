@@ -59,7 +59,7 @@ for chunk in $(seq 0 $((N_CHUNKS - 1))); do
         --path_to_tokenizer="./pretrained/tokenizers/$MODEL_ID" \
         --path_to_model="./pretrained/models/$MODEL_ID" \
         --path_to_dataset="./data/final_chunks/${CHUNK_PREFIX}_${chunk}_min_tokens100_seed42" \
-        --results_dir='./perplexity_results' --nb_samples=$NB_SAMPLES --stride=127 --max_length=128 \
+        --results_dir='./perplexity_results' --stride=127 --max_length=128 \
         --top_probas=10 --shuffle=0 \
         --general_proba_path="./data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${chunk}_128.pickle" \
         --token_freq_path="./data/final_chunks/token_freq/token_freq_${CHUNK_PREFIX}_${chunk}.pickle"
