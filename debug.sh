@@ -36,9 +36,17 @@ OUTDIR="./classifier_results/chunks"
 
 echo $PPL_PATH
 
-python src/split_chunks.py -c config/split_chunks.ini \
-  --path_to_member_data="$TOKENIZED_MEMBER_PATH" \
-  --path_to_non_member_data="$TOKENIZED_NON_MEMBER_PATH" \
-  --prefix="$CHUNK_PREFIX" \
-  --n_pos_chunk=$N_POS_CHUNK \
-  --n_chunks=$N_CHUNKS
+
+python main.py \
+  --experiment_name "$EXP_NAME" \
+  --output_dir "$OUTDIR" \
+  --n_chunks $N_CHUNKS \
+  --path_to_raw_data "$RAW_DATA_PATH" \
+  --path_to_labels "$LABELS_PATH" \
+  --path_to_perplexity_results "$PPL_PATH" \
+  --path_to_normalization_dict "$NORM_PATH" \
+  --norm_type "ratio" \
+  --feat_extraction_type "hist_1000" \
+  --models "logistic_regression,random_forest" \
+  --seed "$SEED" \
+  --nb_samples "$NB_SAMPLES"
