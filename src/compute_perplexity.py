@@ -111,12 +111,17 @@ def main():
     print(f"Loading {DATASET_NAME}...")
     
     tokenized_dataset = load_from_disk(PATH_TO_DATASET)
+
+    print(f'The len of the dataset is {len(tokenized_dataset)}')
+
     # check if the data dir path is a hf dataset or a set of indices as subset
     if PATH_TO_DATA_INDX is not None:
         with open(PATH_TO_DATA_INDX, 'rb') as f:
             indices = pickle.load(f)
             tokenized_dataset = tokenized_dataset.select(indices)
-            
+
+    print(f'The len of the dataset is now {len(tokenized_dataset)}')
+
     model = AutoModelForCausalLM.from_pretrained(PATH_TO_MODEL, torch_dtype=torch.float32).to(device)
     max_length = args.max_length
     stride = args.stride
@@ -159,7 +164,7 @@ def main():
             token_freq = get_token_freq(token_count)
             '''
         else: 
-            for idx, sample in enumerate(tqdm(tokenized_dataset, total=args.nb_samples)):
+            for idx, sample in enumerate(tqdm(tokenized_dataset, total=len(tokenized_dataset))):
                 if idx >= args.nb_samples:
                     break
                 sample_input_ids = sample["input_ids"]
@@ -173,11 +178,12 @@ def main():
 
             print(f"Computing token frequency...")
             # let's also compute token frequency
-            token_count = get_token_count(tokenized_dataset.select(list(range(args.nb_samples))))
+            token_count = get_token_count(tokenized_dataset.select(list(range(len(tokenized_dataset)))))
             token_freq = get_token_freq(token_count)
 
     # save the perplexity results
     file_name = f"{RESULTS_DIR}/perplexity_{MODEL_NAME}_{TOKENIZER_NAME}_{DATASET_NAME}_{DATA_INDX_NAME}_{args.nb_samples}_{max_length}_{stride}_seed{args.seed}.pickle"
+    print(f'The len of all_nlls is now {len(all_nlls)}')
     with open(file_name, 'wb') as f:
         pickle.dump(all_nlls, f)
     print(f'Results saved as {file_name} with len {len(all_nlls)}')
