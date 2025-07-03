@@ -137,6 +137,8 @@ def main():
     print(f"Computing perplexity...")
     with torch.no_grad():
         if args.shuffle:
+            assert "not" == "used"
+            '''
             random.seed(args.seed)
             samples_idx = random.sample(range(len(tokenized_dataset)), min(nb_samples, len(tokenized_dataset)))
             for idx in tqdm(samples_idx):
@@ -154,6 +156,7 @@ def main():
             # let's also compute token frequency
             token_count = get_token_count(tokenized_dataset.select(samples_idx))
             token_freq = get_token_freq(token_count)
+            '''
         else: 
             for idx, sample in enumerate(tqdm(tokenized_dataset, total=nb_samples)):
                 if idx >= nb_samples:
