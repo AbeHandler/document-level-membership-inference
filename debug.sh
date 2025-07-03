@@ -36,11 +36,6 @@ OUTDIR="./classifier_results/chunks"
 
 echo $PPL_PATH
 
-python src/import_huggingface_model.py --model="$HF_MODEL" --write_dir="pretrained"
-
-# 👀 Clear cache before main run!
-python download_data.py  # will download everything from datasets.txt, be sure to clear cache
-
 
 for chunk in $(seq 0 $((N_CHUNKS - 1))); do
     CUDA_VISIBLE_DEVICES=$GPU python src/compute_perplexity.py --data_dir='./data' \
