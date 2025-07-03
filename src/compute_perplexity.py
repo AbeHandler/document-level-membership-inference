@@ -123,7 +123,10 @@ def main():
     top_probas = args.top_probas
 
     all_nlls = dict()
-    nb_samples = len(tokenized_dataset) if args.nb_samples is None else args.nb_samples
+
+    # this line is buggy for me, perplexity path needs to have nb_samples to get loaded correctly in main.py
+    # I am commenting it out
+    # nb_samples = len(tokenized_dataset) if args.nb_samples is None else args.nb_samples
 
     # don't sample more than dataset size
     # this is needed for copyright
@@ -174,7 +177,7 @@ def main():
             token_freq = get_token_freq(token_count)
 
     # save the perplexity results
-    file_name = f"{RESULTS_DIR}/perplexity_{MODEL_NAME}_{TOKENIZER_NAME}_{DATASET_NAME}_{DATA_INDX_NAME}_{nb_samples}_{max_length}_{stride}_seed{args.seed}.pickle"
+    file_name = f"{RESULTS_DIR}/perplexity_{MODEL_NAME}_{TOKENIZER_NAME}_{DATASET_NAME}_{DATA_INDX_NAME}_{args.nb_samples}_{max_length}_{stride}_seed{args.seed}.pickle"
     with open(file_name, 'wb') as f:
         pickle.dump(all_nlls, f)
     print(f'Results saved as {file_name} with len {len(all_nlls)}')
