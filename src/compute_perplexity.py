@@ -127,8 +127,6 @@ def main():
 
     # don't sample more than dataset size
     # this is needed for copyright
-    if args.nb_samples > len(tokenized_dataset):
-        nb_samples = len(tokenized_dataset)
 
     # for the general proba
     all_probas = np.zeros(model.config.vocab_size)
@@ -179,7 +177,7 @@ def main():
     file_name = f"{RESULTS_DIR}/perplexity_{MODEL_NAME}_{TOKENIZER_NAME}_{DATASET_NAME}_{DATA_INDX_NAME}_{nb_samples}_{max_length}_{stride}_seed{args.seed}.pickle"
     with open(file_name, 'wb') as f:
         pickle.dump(all_nlls, f)
-    print(f'Results saved as {file_name}')
+    print(f'Results saved as {file_name} with len {len(all_nlls)}')
 
     # save the general probability
     mean_probas_all = all_probas / n_docs
