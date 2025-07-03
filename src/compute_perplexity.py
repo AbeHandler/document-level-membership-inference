@@ -165,8 +165,6 @@ def main():
             '''
         else: 
             for idx, sample in enumerate(tqdm(tokenized_dataset, total=len(tokenized_dataset))):
-                if idx >= args.nb_samples:
-                    break
                 sample_input_ids = sample["input_ids"]
                 all_results = compute_perplexity(all_tokens_one_doc=sample_input_ids, model=model, 
                                                    stride=stride, max_length=max_length, 
