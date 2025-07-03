@@ -5,6 +5,8 @@ eval "$(conda shell.bash hook)"
 conda activate doc_membership
 huggingface-cli login --token $(cat  ~/.cache/huggingface/token_read)
 
+mkdir -p perplexity_results
+
 GPU=1
 export CUDA_VISIBLE_DEVICES=$GPU
 
@@ -36,10 +38,10 @@ OUTDIR="./classifier_results/chunks"
 
 echo $PPL_PATH
 
-python src/import_huggingface_model.py --model="$HF_MODEL" --write_dir="pretrained"
+# python src/import_huggingface_model.py --model="$HF_MODEL" --write_dir="pretrained"
 
 # 👀 Clear cache before main run!
-python download_data.py  # will download everything from datasets.txt, be sure to clear cache
+# python download_data.py  # will download everything from datasets.txt, be sure to clear cache
 
 
 # this takes a long time and ran
