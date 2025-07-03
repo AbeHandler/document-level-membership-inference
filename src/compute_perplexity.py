@@ -159,8 +159,8 @@ def main():
             token_freq = get_token_freq(token_count)
             '''
         else: 
-            for idx, sample in enumerate(tqdm(tokenized_dataset, total=nb_samples)):
-                if idx >= nb_samples:
+            for idx, sample in enumerate(tqdm(tokenized_dataset, total=args.nb_samples)):
+                if idx >= args.nb_samples:
                     break
                 sample_input_ids = sample["input_ids"]
                 all_results = compute_perplexity(all_tokens_one_doc=sample_input_ids, model=model, 
@@ -173,7 +173,7 @@ def main():
 
             print(f"Computing token frequency...")
             # let's also compute token frequency
-            token_count = get_token_count(tokenized_dataset.select(list(range(nb_samples))))
+            token_count = get_token_count(tokenized_dataset.select(list(range(args.nb_samples))))
             token_freq = get_token_freq(token_count)
 
     # save the perplexity results
