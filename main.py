@@ -168,6 +168,7 @@ def main(args):
     df = pd.DataFrame({"score": all_probs, "id": all_test_ids})
 
     df.to_csv(f"{args.output_dir}/{args.experiment_name}.csv", index=False)
+    print(f"{args.output_dir}/{args.experiment_name}.csv")
 
 def make_dir(dir_):
 
