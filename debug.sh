@@ -36,17 +36,19 @@ OUTDIR="./classifier_results/chunks"
 
 echo $PPL_PATH
 
+python src/import_huggingface_model.py --model="$HF_MODEL" --write_dir="pretrained"
 
-python main.py \
-  --experiment_name "$EXP_NAME" \
-  --output_dir "$OUTDIR" \
-  --n_chunks $N_CHUNKS \
-  --path_to_raw_data "$RAW_DATA_PATH" \
-  --path_to_labels "$LABELS_PATH" \
-  --path_to_perplexity_results "$PPL_PATH" \
-  --path_to_normalization_dict "$NORM_PATH" \
-  --norm_type "ratio" \
-  --feat_extraction_type "hist_1000" \
-  --models "logistic_regression,random_forest" \
-  --seed "$SEED" \
-  --nb_samples "$NB_SAMPLES"
+# 👀 Clear cache before main run!
+python download_data.py  # will download everything from datasets.txt, be sure to clear cache
+
+
+for chunk in $(seq 0 $((N_CHUNKS - 1))); do
+    CUDA_VISIBLE_DEVICES=$GPU python src/compute_perplexity.py --data_dir='./data' \
+        --path_to_tokenizer="./pretrained/tokenizers/$MODEL_ID" \
+        --path_to_model="./pretrained/models/$MODEL_ID" \
+        --path_to_dataset="./data/final_chunks/${CHUNK_PREFIX}_${chunk}_min_tokens100_seed42" \
+        --results_dir='./perplexity_results' --nb_samples=$NB_SAMPLES --stride=127 --max_length=128 \
+        --top_probas=10 --shuffle=0 \
+        --general_proba_path="./data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${chunk}_128.pickle" \
+        --token_freq_path="./data/final_chunks/token_freq/token_freq_${CHUNK_PREFIX}_${chunk}.pickle"
+done
