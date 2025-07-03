@@ -115,6 +115,7 @@ def main(args):
         chunk_dataset_all.save_to_disk(f"{args.output_dir}/{args.prefix}_{chunk_id}_min_tokens{args.min_tokens}_seed{args.seed}")
         with open(f"{args.output_dir}/{args.prefix}_{chunk_id}_labels.pickle", 'wb') as f:
             pickle.dump(labels, f)
+        import pdb; pdb.set_trace()
 
 if __name__ == '__main__':
     main(get_parser().parse_args())
