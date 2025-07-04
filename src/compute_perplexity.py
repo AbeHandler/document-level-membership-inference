@@ -140,6 +140,11 @@ def main():
     all_probas = np.zeros(model.config.vocab_size)
     n_docs = 0
 
+    file_name = f"{RESULTS_DIR}/perplexity_{MODEL_NAME}_{TOKENIZER_NAME}_{DATASET_NAME}_{DATA_INDX_NAME}_{args.nb_samples}_{max_length}_{stride}_seed{args.seed}.pickle"
+    if Path(file_name).exists():
+        print("all done ending early")
+        import sys; sys.exit(0)
+
     print(f"Computing perplexity...")
     with torch.no_grad():
         if args.shuffle:
@@ -180,7 +185,6 @@ def main():
             token_freq = get_token_freq(token_count)
 
     # save the perplexity results
-    file_name = f"{RESULTS_DIR}/perplexity_{MODEL_NAME}_{TOKENIZER_NAME}_{DATASET_NAME}_{DATA_INDX_NAME}_{args.nb_samples}_{max_length}_{stride}_seed{args.seed}.pickle"
     print(f'The len of all_nlls is now {len(all_nlls)}')
     with open(file_name, 'wb') as f:
         pickle.dump(all_nlls, f)
