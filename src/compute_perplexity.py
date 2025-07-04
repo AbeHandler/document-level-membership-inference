@@ -33,6 +33,8 @@ args = parser.parse_args()
 def compute_perplexity(all_tokens_one_doc: list, model,
                        stride: int, max_length: int, top_probas: int, device):
     
+    print("?", stride)
+    print("?", max_length)
     seq_len = len(all_tokens_one_doc)
     nlls = dict()  # dict with key token idx in doc and val negative log likelihood 
     probas = dict() # dict with as key token idx in doc and as value the top predicted probas over the vocab with its token
