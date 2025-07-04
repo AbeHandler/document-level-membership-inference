@@ -26,7 +26,7 @@ TOKENIZED_MEMBER_PATH="data/tokenized/$MODEL_ID/$MEMBER_DATASET_NAME"
 TOKENIZED_NON_MEMBER_PATH="data/tokenized/$MODEL_ID/$NON_MEMBER_DATASET_NAME"
 CHUNK_ID="XX"
 MAX_LEN=128
-STRIDE=127
+STRIDE=128
 SEED=42
 
 RAW_DATA_PATH="data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_min_tokens100_seed42"
@@ -61,7 +61,7 @@ for chunk in $(seq 0 $((N_CHUNKS - 1))); do
         --path_to_tokenizer="./pretrained/tokenizers/$MODEL_ID" \
         --path_to_model="./pretrained/models/$MODEL_ID" \
         --path_to_dataset="./data/final_chunks/${CHUNK_PREFIX}_${chunk}_min_tokens100_seed42" \
-        --results_dir='./perplexity_results' --stride=127 --max_length=128 \
+        --results_dir='./perplexity_results' --stride=$STRIDE --max_length=$MAX_LEN \
         --top_probas=10 --shuffle=0 \
         --nb_samples "$NB_SAMPLES" \
         --general_proba_path="./data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${chunk}_128.pickle" \
