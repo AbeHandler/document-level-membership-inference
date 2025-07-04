@@ -42,6 +42,12 @@ def compute_perplexity(all_tokens_one_doc: list, model,
     # note that this only works if you have at most one value per token. 
     prev_end_loc = 0
 
+    # added this to shorten processing time for books
+    max_doc_length = 10000  # or whatever you choose
+    if seq_len > max_doc_length:
+        all_tokens_one_doc = all_tokens_one_doc[:max_doc_length]
+        seq_len = max_doc_length
+
     # in order to compute the general proba, save all probas
     probas_sum = np.zeros(model.config.vocab_size)
     n_samples = 0
