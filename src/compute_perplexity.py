@@ -43,7 +43,7 @@ def compute_perplexity(all_tokens_one_doc: list, model,
     prev_end_loc = 0
 
     # added this to shorten processing time for books
-    max_doc_length = 10000  # or whatever you choose
+    max_doc_length = 5000  # or whatever you choose
     if seq_len > max_doc_length:
         all_tokens_one_doc = all_tokens_one_doc[:max_doc_length]
         seq_len = max_doc_length
