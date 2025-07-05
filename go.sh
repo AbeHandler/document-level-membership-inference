@@ -64,7 +64,7 @@ for chunk in $(seq 0 $((N_CHUNKS - 1))); do
         --results_dir='./perplexity_results' --stride=$STRIDE --max_length=$MAX_LEN \
         --top_probas=10 --shuffle=0 \
         --nb_samples "$NB_SAMPLES" \
-        --general_proba_path="./data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${chunk}_{$MAX_LEN}.pickle" \
+        --general_proba_path="./data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${chunk}_${MAX_LEN}.pickle" \
         --token_freq_path="./data/final_chunks/token_freq/token_freq_${CHUNK_PREFIX}_${chunk}.pickle"
 done
 
