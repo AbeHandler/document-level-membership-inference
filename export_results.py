@@ -44,6 +44,6 @@ if __name__ == "__main__":
     ).reset_index()
 
     print(df)
-
+    df["method"] = "doc"
     df.to_csv("doc.csv", index=False)
 
