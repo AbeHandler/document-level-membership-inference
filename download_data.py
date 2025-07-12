@@ -22,3 +22,10 @@ if __name__ == "__main__":
     datasets = [o.strip('\n') for o in open("datasets.txt")]
     for dspath in datasets:
         warm_cache(dspath)
+
+    # for suffix array one we only want when blocksbin == 0
+    from datasets import load_dataset
+    ds = load_dataset("abehandlerorg/suffixesnoblocksbin", split="train")
+    ds.filter(lambda x: x["blocksbin"] == 0)
+    print(len(ds))
+    ds.save_to_disk(f"data/suffixesnoblocksbin")
