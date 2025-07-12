@@ -26,6 +26,7 @@ if __name__ == "__main__":
     # for suffix array one we only want when blocksbin == 0
     from datasets import load_dataset
     ds = load_dataset("abehandlerorg/suffixesnoblocksbin", split="train")
-    ds.filter(lambda x: x["blocksbin"] == 0)
+    ds = ds.filter(lambda x: x["blocksbin"] == 0)
     print(len(ds))
+    import pdb; pdb.set_trace()
     ds.save_to_disk(f"data/suffixesnoblocksbin")
