@@ -28,4 +28,5 @@ if __name__ == "__main__":
     ds = load_dataset("abehandlerorg/suffixesnoblocksbin", split="train")
     ds = ds.filter(lambda x: x["blocksbin"] == 0)
     ds = ds.map(lambda x: {"text": x["sequence"]}, remove_columns=["sequence"])
+    ds = ds.map(lambda x: {"id": x["text"]})
     ds.save_to_disk(f"data/suffixesnoblocksbin")
