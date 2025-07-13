@@ -4,11 +4,8 @@ from scipy.stats import wilcoxon
 
 
 if __name__ == "__main__":
-    fn1 = "classifier_results/chunks/suffixesnoblocksbin_blockbench-blocksbin_chunkXX.csv"
-    fn2 = "classifier_results/chunks/suffixesnoblocksbin_blockbench-noblocksbin_chunkXX.csv"
-
-    blocks = pd.read_csv(fn1).rename(columns={"score": "blocksscore"})
-    noblocks = pd.read_csv(fn2).rename(columns={"score": "noblocksscore"})
+    blocks = pd.read_csv("classifier_results/chunks/suffixesnoblocksbin_blockbench-blocksbin_chunkXX.csv").rename(columns={"score": "blocksscore"})
+    noblocks = pd.read_csv("classifier_results/chunks/suffixesnoblocksbin_blockbench-noblocksbin_chunkXX.csv").rename(columns={"score": "noblocksscore"})
 
     df = blocks.merge(noblocks, on="id")
     df = df[~df["id"].isna()]
