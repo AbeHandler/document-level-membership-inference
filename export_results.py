@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import json
 from scipy.stats import wilcoxon
 
 
@@ -29,12 +30,13 @@ if __name__ == "__main__":
 
     df["ate"] = -1 * df["ate"]
 
-    print(np.mean(df["ate"]))
+    out = {"ate": np.mean(df["ate"])}
 
     # Assume `ate_values` is a 1D array of ATE estimates per unit/block/cluster
     stat, p = wilcoxon(df["ate"], alternative="greater")
 
     print(f"Statistic: {stat}, p-value: {p}")
+    out['pval'] = p
 
     df["size_bin"] = pd.cut(df["size"], bins=range(0, 50, 5), right=True)
 
@@ -46,4 +48,6 @@ if __name__ == "__main__":
     print(df)
     df["method"] = "doc"
     df.to_csv("doc.csv", index=False)
+    with open("e1.json", "w") as of:
+        of.write(json.dumps(out))
 
