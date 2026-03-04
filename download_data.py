@@ -86,7 +86,7 @@ def parse_args():
     parser.add_argument(
         "--data-dir",
         type=str,
-        default="data",
+        default="/mnt/storage/data",
         help="Directory to save downloaded datasets (default: data)"
     )
     parser.add_argument(
