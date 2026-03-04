@@ -1,6 +1,8 @@
 from transformers import AutoTokenizer
 from datasets import load_from_disk
 import argparse
+import os
+from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--data_dir", type=str, required=True)
@@ -18,12 +20,20 @@ def main():
     PATH_TO_TOKENIZER = args.path_to_tokenizer
     TOKENIZER_NAME = PATH_TO_TOKENIZER.split('/')[-1]
 
+    tokenized_output_dir = f"{DATA_DIR}/tokenized/{TOKENIZER_NAME}/{DATASET_NAME}"
+    done_marker = Path(tokenized_output_dir) / ".DONE"
+
+    # Check if already completed
+    if done_marker.exists():
+        print(f"Tokenization already completed for {DATASET_NAME} (found {done_marker}), skipping...")
+        return
+
     tokenizer = AutoTokenizer.from_pretrained(args.hfpath)
     print(f"Loaded tokenizer for {args.hfpath}")
 
     print(f"Loading {DATASET_NAME}...")
     dataset = load_from_disk(PATH_TO_DATASET)
-    
+
     print(f"Starting tokenization {DATASET_NAME}...")
     tokenized_dataset = dataset.map(
                 lambda samples: tokenizer(samples["text"]),
@@ -33,15 +43,19 @@ def main():
                 load_from_cache_file=False,
                 desc=f"Running {TOKENIZER_NAME} tokenizer on {DATASET_NAME}",
             )
-    
+
     print(f"Tokenization done for {DATASET_NAME}...")
 
-    tokenized_output_dir = f"{DATA_DIR}/tokenized/{TOKENIZER_NAME}"
+    # Ensure output directory exists
+    os.makedirs(tokenized_output_dir, exist_ok=True)
+
     tokenized_dataset.save_to_disk(
-            f"{tokenized_output_dir}/{DATASET_NAME}", max_shard_size=args.max_shard_size, num_proc=args.nb_workers
+            tokenized_output_dir, max_shard_size=args.max_shard_size, num_proc=args.nb_workers
             )
-    
-    print(f"Tokenized dataset saved for {DATASET_NAME}")
+
+    # Create DONE marker
+    done_marker.touch()
+    print(f"Tokenized dataset saved for {DATASET_NAME} and marked as complete")
 
 if __name__ == "__main__":
     main()
