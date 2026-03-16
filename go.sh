@@ -22,17 +22,17 @@ echo $N_CHUNKS
 NON_MEMBER_DATASET_NAME='project-gutenberg-extended'
 CHUNK_PREFIX=$MEMBER_DATASET_NAME
 TOKENIZER_PATH="./pretrained/tokenizers/$MODEL_ID"
-TOKENIZED_MEMBER_PATH="data/tokenized/$MODEL_ID/$MEMBER_DATASET_NAME"
-TOKENIZED_NON_MEMBER_PATH="data/tokenized/$MODEL_ID/$NON_MEMBER_DATASET_NAME"
+TOKENIZED_MEMBER_PATH="/mnt/storage/abe/data/tokenized/$MODEL_ID/$MEMBER_DATASET_NAME"
+TOKENIZED_NON_MEMBER_PATH="/mnt/storage/abe/data/tokenized/$MODEL_ID/$NON_MEMBER_DATASET_NAME"
 CHUNK_ID="XX"
 MAX_LEN=1024
 STRIDE=1024
 SEED=42
 
-RAW_DATA_PATH="data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_min_tokens100_seed42"
-LABELS_PATH="data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_labels.pickle"
+RAW_DATA_PATH="/mnt/storage/abe/data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_min_tokens100_seed42"
+LABELS_PATH="/mnt/storage/abe/data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_labels.pickle"
 PPL_PATH="perplexity_results/perplexity_${MODEL_ID}_${MODEL_ID}_${CHUNK_PREFIX}_${CHUNK_ID}_min_tokens100_seed42__${NB_SAMPLES}_${MAX_LEN}_${STRIDE}_seed${SEED}.pickle"
-NORM_PATH="data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${CHUNK_ID}_${MAX_LEN}.pickle"
+NORM_PATH="/mnt/storage/abe/data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${CHUNK_ID}_${MAX_LEN}.pickle"
 EXP_NAME="${CHUNK_PREFIX}_${MODEL_ID}_chunk${CHUNK_ID}"
 OUTDIR="./classifier_results/chunks"
 
@@ -45,8 +45,11 @@ echo $PPL_PATH
 
 
 # this takes a long time and ran
-python src/tokenize_data.py --data_dir="./data" --hfpath="$HF_MODEL" --path_to_dataset="data/$NON_MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
-python src/tokenize_data.py --data_dir="./data" --hfpath="$HF_MODEL" --path_to_dataset="data/$MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
+python src/tokenize_data.py --data_dir="/mnt/storage/abe/data" --hfpath="$HF_MODEL" --path_to_dataset="/mnt/storage/abe/$NON_MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
+python src/tokenize_data.py --data_dir="/mnt/storage/abe/data" --hfpath="$HF_MODEL" --path_to_dataset="/mnt/storage/abe/$MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
+
+proceed
+exit 0
 
 python src/split_chunks.py -c config/split_chunks.ini \
   --path_to_member_data="$TOKENIZED_MEMBER_PATH" \
