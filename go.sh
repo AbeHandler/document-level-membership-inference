@@ -15,7 +15,6 @@ BASE_DATA_DIR=${BASE_DATA_DIR:-"/mnt/storage/abe"}
 HF_MODEL=${1:-"dobolyilab/MISQSIPressPublic-bl1-124M"}  # default if not provided
 MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
 MEMBER_DATASET_NAME=${2:-"blockeddocs"}
-DEVICE="cuda:1"
 N_POS_CHUNK=${3:-200}
 NB_SAMPLES=${4:-400}
 N_CHUNKS=${5:-5}
