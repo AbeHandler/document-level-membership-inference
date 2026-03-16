@@ -10,6 +10,8 @@ mkdir -p perplexity_results
 GPU=1
 export CUDA_VISIBLE_DEVICES=$GPU
 
+BASE_DATA_DIR=${BASE_DATA_DIR:-"/mnt/storage/abe"}
+
 HF_MODEL=${1:-"dobolyilab/MISQSIPressPublic-bl1-124M"}  # default if not provided
 MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
 MEMBER_DATASET_NAME=${2:-"blockeddocs"}
@@ -22,17 +24,17 @@ echo $N_CHUNKS
 NON_MEMBER_DATASET_NAME='project-gutenberg-extended'
 CHUNK_PREFIX=$MEMBER_DATASET_NAME
 TOKENIZER_PATH="./pretrained/tokenizers/$MODEL_ID"
-TOKENIZED_MEMBER_PATH="/mnt/storage/abe/data/tokenized/$MODEL_ID/$MEMBER_DATASET_NAME"
-TOKENIZED_NON_MEMBER_PATH="/mnt/storage/abe/data/tokenized/$MODEL_ID/$NON_MEMBER_DATASET_NAME"
+TOKENIZED_MEMBER_PATH="$BASE_DATA_DIR/data/tokenized/$MODEL_ID/$MEMBER_DATASET_NAME"
+TOKENIZED_NON_MEMBER_PATH="$BASE_DATA_DIR/data/tokenized/$MODEL_ID/$NON_MEMBER_DATASET_NAME"
 CHUNK_ID="XX"
 MAX_LEN=1024
 STRIDE=1024
 SEED=42
 
-RAW_DATA_PATH="/mnt/storage/abe/data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_min_tokens100_seed42"
-LABELS_PATH="/mnt/storage/abe/data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_labels.pickle"
+RAW_DATA_PATH="$BASE_DATA_DIR/data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_min_tokens100_seed42"
+LABELS_PATH="$BASE_DATA_DIR/data/final_chunks/${CHUNK_PREFIX}_${CHUNK_ID}_labels.pickle"
 PPL_PATH="perplexity_results/perplexity_${MODEL_ID}_${MODEL_ID}_${CHUNK_PREFIX}_${CHUNK_ID}_min_tokens100_seed42__${NB_SAMPLES}_${MAX_LEN}_${STRIDE}_seed${SEED}.pickle"
-NORM_PATH="/mnt/storage/abe/data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${CHUNK_ID}_${MAX_LEN}.pickle"
+NORM_PATH="$BASE_DATA_DIR/data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${CHUNK_ID}_${MAX_LEN}.pickle"
 EXP_NAME="${CHUNK_PREFIX}_${MODEL_ID}_chunk${CHUNK_ID}"
 OUTDIR="./classifier_results/chunks"
 
@@ -45,10 +47,8 @@ echo $PPL_PATH
 
 
 # this takes a long time and ran
-python src/tokenize_data.py --data_dir="/mnt/storage/abe/data" --hfpath="$HF_MODEL" --path_to_dataset="/mnt/storage/abe/$NON_MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
-python src/tokenize_data.py --data_dir="/mnt/storage/abe/data" --hfpath="$HF_MODEL" --path_to_dataset="/mnt/storage/abe/$MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
-
-exit 0
+python src/tokenize_data.py --data_dir="$BASE_DATA_DIR/data" --hfpath="$HF_MODEL" --path_to_dataset="$BASE_DATA_DIR/$NON_MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
+python src/tokenize_data.py --data_dir="$BASE_DATA_DIR/data" --hfpath="$HF_MODEL" --path_to_dataset="$BASE_DATA_DIR/$MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
 
 python src/split_chunks.py -c config/split_chunks.ini \
   --path_to_member_data="$TOKENIZED_MEMBER_PATH" \
@@ -59,15 +59,15 @@ python src/split_chunks.py -c config/split_chunks.ini \
 
 
 for chunk in $(seq 0 $((N_CHUNKS - 1))); do
-    CUDA_VISIBLE_DEVICES=$GPU python src/compute_perplexity.py --data_dir='./data' \
+    CUDA_VISIBLE_DEVICES=$GPU python src/compute_perplexity.py --data_dir="$BASE_DATA_DIR/data" \
         --path_to_tokenizer="./pretrained/tokenizers/$MODEL_ID" \
         --path_to_model="./pretrained/models/$MODEL_ID" \
-        --path_to_dataset="./data/final_chunks/${CHUNK_PREFIX}_${chunk}_min_tokens100_seed42" \
-        --results_dir='./perplexity_results' --stride=$STRIDE --max_length=$MAX_LEN \
+        --path_to_dataset="$BASE_DATA_DIR/data/final_chunks/${CHUNK_PREFIX}_${chunk}_min_tokens100_seed42" \
+        --results_dir="$BASE_DATA_DIR/perplexity_results" --stride=$STRIDE --max_length=$MAX_LEN \
         --top_probas=10 --shuffle=0 \
         --nb_samples "$NB_SAMPLES" \
-        --general_proba_path="./data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${chunk}_${MAX_LEN}.pickle" \
-        --token_freq_path="./data/final_chunks/token_freq/token_freq_${CHUNK_PREFIX}_${chunk}.pickle"
+        --general_proba_path="$BASE_DATA_DIR/data/final_chunks/general_proba/general_proba_${CHUNK_PREFIX}_${chunk}_${MAX_LEN}.pickle" \
+        --token_freq_path="$BASE_DATA_DIR/data/final_chunks/token_freq/token_freq_${CHUNK_PREFIX}_${chunk}.pickle"
 done
 
 
