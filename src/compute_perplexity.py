@@ -7,6 +7,7 @@ from transformers import AutoModelForCausalLM
 from datasets import load_from_disk
 import random 
 import argparse
+import os
 from pathlib import Path
 from compute_token_freq import get_token_count, get_token_freq
 
