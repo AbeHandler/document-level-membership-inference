@@ -48,7 +48,6 @@ echo $PPL_PATH
 python src/tokenize_data.py --data_dir="/mnt/storage/abe/data" --hfpath="$HF_MODEL" --path_to_dataset="/mnt/storage/abe/$NON_MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
 python src/tokenize_data.py --data_dir="/mnt/storage/abe/data" --hfpath="$HF_MODEL" --path_to_dataset="/mnt/storage/abe/$MEMBER_DATASET_NAME" --nb_workers=4 --path_to_tokenizer="$TOKENIZER_PATH"
 
-proceed
 exit 0
 
 python src/split_chunks.py -c config/split_chunks.ini \
