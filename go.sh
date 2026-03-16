@@ -15,6 +15,7 @@ BASE_DATA_DIR=${BASE_DATA_DIR:-"/mnt/storage/abe"}
 HF_MODEL=${1:-"dobolyilab/MISQSIPressPublic-bl1-124M"}  # default if not provided
 MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
 MEMBER_DATASET_NAME=${2:-"blockeddocs"}
+DEVICE="cuda:1"
 N_POS_CHUNK=${3:-200}
 NB_SAMPLES=${4:-400}
 N_CHUNKS=${5:-5}
@@ -58,6 +59,7 @@ python src/split_chunks.py -c config/split_chunks.ini \
   --n_chunks=$N_CHUNKS
 
 
+
 for chunk in $(seq 0 $((N_CHUNKS - 1))); do
     CUDA_VISIBLE_DEVICES=$GPU python src/compute_perplexity.py --data_dir="$BASE_DATA_DIR/data" \
         --path_to_tokenizer="./pretrained/tokenizers/$MODEL_ID" \
@@ -70,6 +72,8 @@ for chunk in $(seq 0 $((N_CHUNKS - 1))); do
         --token_freq_path="$BASE_DATA_DIR/data/final_chunks/token_freq/token_freq_${CHUNK_PREFIX}_${chunk}.pickle"
 done
 
+
+exit 0
 
 python main.py \
   --experiment_name "$EXP_NAME" \

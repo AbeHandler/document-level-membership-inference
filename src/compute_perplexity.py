@@ -113,7 +113,7 @@ def main():
     mkdir(args.token_freq_path)
     mkdir(args.general_proba_path)
 
-    device = torch.device("cuda:0")
+    device = torch.device(os.getenv("DEVICE", "cuda:0"))
     print("Using device:", device)
     
     print(f"Loading {DATASET_NAME}...")
