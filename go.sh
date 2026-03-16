@@ -59,6 +59,7 @@ python src/split_chunks.py -c config/split_chunks.ini \
   --n_chunks=$N_CHUNKS
 
 
+export DEVICE
 
 for chunk in $(seq 0 $((N_CHUNKS - 1))); do
     CUDA_VISIBLE_DEVICES=$GPU python src/compute_perplexity.py --data_dir="$BASE_DATA_DIR/data" \
