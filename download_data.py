@@ -1,8 +1,38 @@
 import argparse
+import os
 import shutil
 from pathlib import Path
 from datasets import load_dataset, Dataset
 
+
+def load_url_set(filepath: str) -> set:
+    """
+    Load URLs from a text file into a set.
+
+    Args:
+        filepath: Path to text file with one URL per line
+
+    Returns:
+        Set of URLs with whitespace stripped
+    """
+    with open(filepath) as f:
+        return set(line.strip() for line in f)
+
+
+bothbins_file = "data/interim/R2/cleaning/verified_bothbins_urls.txt"
+excluded_file = "data/interim/R2/cleaning/verified_excluded_urls.txt"
+
+if not Path(bothbins_file).exists() or not Path(excluded_file).exists():
+    # Create directory if needed
+    Path("data/interim/R2/cleaning").mkdir(parents=True, exist_ok=True)
+
+    cmd1 = '''cp /Users/abha4861/dolma/data/interim/R2/cleaning/verified_bothbins_urls.txt data/interim/R2/cleaning/verified_bothbins_urls.txt'''
+    cmd2 = '''cp /Users/abha4861/dolma/data/interim/R2/cleaning/verified_excluded_urls.txt data/interim/R2/cleaning/verified_excluded_urls.txt'''
+    os.system(cmd1)
+    os.system(cmd2)
+
+bothbins_urls = load_url_set("data/interim/R2/cleaning/verified_bothbins_urls.txt")
+excluded_urls = load_url_set("data/interim/R2/cleaning/verified_excluded_urls.txt")
 
 def dataset_exists(output_path):
     """Check if dataset already exists on disk."""
@@ -30,6 +60,33 @@ def download_standard_dataset(dspath, data_dir="data", cache_dir="datacache", sk
         ds = ds_streaming.take(50000)
         ds_fixed = Dataset.from_generator(lambda: ds)
         ds_fixed.save_to_disk(str(output_path))
+        print(f"Successfully downloaded {dsname}")
+    except UnicodeDecodeError as e:
+        print(f"UnicodeDecodeError while downloading {dsname}: {e}")
+
+
+def download_standard_dataset_complete(dspath, data_dir="data", cache_dir="datacache", skip_existing=True):
+    """Download a complete standard dataset from HuggingFace (no streaming, full dataset)."""
+    dsname = get_dataset_name(dspath)
+    output_path = Path(data_dir) / dsname
+
+    if skip_existing and dataset_exists(output_path):
+        print(f"Dataset {dsname} already exists at {output_path}, skipping download")
+        return
+
+    print(f"Downloading {dsname} to {output_path}")
+    try:
+        ds = load_dataset(dspath, split="train", cache_dir=cache_dir)
+
+        # Filter based on URL membership
+        if dsname.endswith("bothbins"):
+            print(f"Filtering {dsname} to only include URLs in bothbins_urls")
+            ds = ds.filter(lambda x: x["url"] in bothbins_urls)
+        elif dsname.endswith("excluded-docs"):
+            print(f"Filtering {dsname} to only include URLs in excluded_urls")
+            ds = ds.filter(lambda x: x["url"] in excluded_urls)
+
+        ds.save_to_disk(str(output_path))
         print(f"Successfully downloaded {dsname}")
     except UnicodeDecodeError as e:
         print(f"UnicodeDecodeError while downloading {dsname}: {e}")
