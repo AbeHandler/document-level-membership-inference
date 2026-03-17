@@ -179,12 +179,20 @@ def main():
     # Download standard datasets
     skip_existing = not args.force
     for dspath in datasets:
-        download_standard_dataset(
-            dspath,
-            data_dir=args.data_dir,
-            cache_dir=args.cache_dir,
-            skip_existing=skip_existing
-        )
+        if "bothbins" in dspath or "excluded-docs" in dspath:
+            download_standard_dataset_complete(
+                dspath,
+                data_dir=args.data_dir,
+                cache_dir=args.cache_dir,
+                skip_existing=skip_existing
+            )
+        else:
+            download_standard_dataset(
+                dspath,
+                data_dir=args.data_dir,
+                cache_dir=args.cache_dir,
+                skip_existing=skip_existing
+            )
 
     # Download and process suffixes dataset
     download_suffixes_dataset(data_dir=args.data_dir, skip_existing=skip_existing)
