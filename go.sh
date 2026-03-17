@@ -73,7 +73,6 @@ for chunk in $(seq 0 $((N_CHUNKS - 1))); do
 done
 
 
-exit 0
 
 python main.py \
   --experiment_name "$EXP_NAME" \
