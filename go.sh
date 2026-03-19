@@ -40,6 +40,9 @@ OUTDIR="./classifier_results/chunks"
 
 echo $PPL_PATH
 
+# Validate datasets exist before proceeding
+python scripts/validate_datasets.py --member "$MEMBER_DATASET_NAME" --non-member "$NON_MEMBER_DATASET_NAME"
+
 # python src/import_huggingface_model.py --model="$HF_MODEL" --write_dir="pretrained"
 
 # 👀 Clear cache before main run!
