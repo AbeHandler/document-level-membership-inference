@@ -12,6 +12,11 @@ export CUDA_VISIBLE_DEVICES=$GPU
 
 BASE_DATA_DIR=${BASE_DATA_DIR:-"/mnt/storage/abe"}
 
+# Create necessary directories in BASE_DATA_DIR
+mkdir -p "$BASE_DATA_DIR/perplexity_results"
+mkdir -p "$BASE_DATA_DIR/data/final_chunks/general_proba"
+mkdir -p "$BASE_DATA_DIR/data/final_chunks/token_freq"
+
 HF_MODEL=${1:-"dobolyilab/MISQSIPressPublic-bl1-124M"}  # default if not provided
 MODEL_ID=$(basename "$HF_MODEL")  # gets 'open_llama_3b' from full model name
 MEMBER_DATASET_NAME=${2:-"blockeddocs"}
