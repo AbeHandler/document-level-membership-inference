@@ -58,7 +58,8 @@ python src/split_chunks.py -c config/split_chunks.ini \
   --path_to_non_member_data="$TOKENIZED_NON_MEMBER_PATH" \
   --prefix="$CHUNK_PREFIX" \
   --n_pos_chunk=$N_POS_CHUNK \
-  --n_chunks=$N_CHUNKS
+  --n_chunks=$N_CHUNKS \
+  --output_dir="$BASE_DATA_DIR/data/final_chunks"
 
 
 export DEVICE
