@@ -5,8 +5,6 @@ eval "$(conda shell.bash hook)"
 conda activate doc_membership
 huggingface-cli login --token $(cat  ~/.cache/huggingface/token_read)
 
-mkdir -p perplexity_results
-
 GPU=1
 export CUDA_VISIBLE_DEVICES=$GPU
 
